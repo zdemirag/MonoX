@@ -1,0 +1,162 @@
+     1	18:16	emacs -nw ../all.txt
+     3	16:24	ls /eos/cms/test/tier0/zdemirag/
+     4	16:25	rm eos/cms/test/tier0/zdemirag/test_*
+     5	16:50	ls eos/cms/test/tier0/zdemirag/
+     6	16:50	rm -f eos/cms/test/tier0/zdemirag/test_*
+     7	16:57	logout
+     8	17:58	ssh cmsusr
+     9	17:59	ssh -Y cmsusr
+    10	18:13	cd lnwork/Limits13TeV/CMSSW_7_1_5/sre
+    11	18:16	cd March8/g1/vector/
+    12	18:16	mv higgsCombineCENTRAL.Asymptotic.mH800* cl90/
+    13	18:16	mv log* limits_vector.root job_Test_* cl90/
+    14	18:17	cp simple.py cl90/
+    15	18:18	rm *~
+    16	18:19	rm -rf job_Test_*
+    17	18:20	bjobs | grep zdemira | awk '{print $1}' | xargs bkill
+    18	18:21	cd ../axial/
+    19	18:21	mkdir cl90
+    20	18:21	mv higgsCombineCENTRAL.Asymptotic.mH801* log* job_Test_* limits_axial.root cl90/
+    21	18:21	emacs -nw simple.py
+    22	18:22	python simple.py
+    23	18:23	cd MonoJetPlotting
+    24	18:30	emacs -nw plotAxial.C
+    25	18:46	root -l plotAxialDD.C
+    26	18:56	root -l -b -q plotVectorDD.C
+    27	18:57	emacs -nw plotVectorDD.C
+    28	18:57	evince scan_vector_DD.pdf
+    29	18:57	emacs -nw plotAxialDD.C
+    30	18:57	root -l plotAxialDD.C -b -q
+    31	18:58	evince scan_axial_DD.pdf
+    32	18:58	ls -lhtr *.pdf
+    33	18:58	mkdir ~/public/forMonojet/dd_final
+    34	18:58	cp scan_vector_DD.pdf scan_axial_DD.pdf ~/public/forMonojet/dd_final
+    35	18:58	cd ~/public/forMonojet/dd_final
+    36	19:01	cd www/Monojet/moriond/
+    37	19:01	ll
+    38	19:01	cd preapproval2/
+    39	19:01	cd combined/
+    40	19:02	cd ~/lnwork/Limits13TeV/CMSSW_7_1_5/src/MonoX-1/moriond/combined/
+    41	19:03	cd preapproval_homework2/combined/
+    42	19:03	emacs -nw plotPreFitPostFit.py
+    43	19:03	emacs -nw plot_ratio.py
+    44	19:04	python plot_ratio.py -b -q -l
+    46	11:31	bjobs
+    47	11:31	cd MonoX-1/
+    48	11:31	cd moriond/
+    49	11:31	cd raffaele/Combined/
+    50	11:32	cd March8/g1/axial/
+    51	11:32	hadd limits_axial_cl95.root higgsCombineCENTRAL.Asymptotic.mH801*.root
+    52	11:32	cp axial/limits_axial_cl95.root .
+    53	11:32	cd vector/
+    54	11:32	hadd limits_vector_cl95.root higgsCombineCENTRAL.Asymptotic.mH80*.root
+    55	11:33	cp limits_vector_cl95.root ../
+    57	11:33	ped
+    58	11:33	cd ../../MonoJetPlotting
+    59	11:33	emacs plotAxial.C &
+    60	11:34	root -l plotAxial.C
+    61	11:35	evince scan_axial.pdf
+    62	11:35	evince scan_axial*.pdf
+    63	11:36	cp plotAxial.C plotAxial_cl95.C
+    64	11:42	cp plotVector.C plotVector_cl95.C
+    65	11:43	emacs plotVector_cl95.C plotAxial_cl95.C &
+    66	11:56	emacs plotVector_cl95.C &
+    67	11:58	root -l plotAxial_cl95.C
+    68	12:04	evince scan_vector_cl95.pdf scan_vector.pdf
+    69	12:05	root -l plotVector_cl95.C
+    70	12:16	mkdir ~/public/forMonojet/cl_95
+    71	12:17	cp scan_*cl95* ~/public/forMonojet/cl_95
+    72	12:17	ls ~/public/forMonojet/cl_95
+    73	13:47	cd ../../
+    74	13:47	cd Combined/
+    76	13:47	cd March8/g1/
+    77	13:47	cd axial/
+    79	13:47	cat simple.py
+    80	13:47	combine datacard_COMB.txt -M 80110000050
+    81	13:48	combine -M Asymptotic datacard_COMB.txt -M 80110000050
+    82	13:48	cmsenv
+    83	13:48	combine -M Asymptotic datacard_COMB.txt -m 80110000050
+    84	13:50	combine -M Asymptotic datacard_COMB.txt -m 80110000050 --cl=0.90
+    85	13:52	combine -M Asymptotic datacard_COMB.txt -m 80110000050 --cl=0.95
+    86	11:59	wd
+    88	11:59	ls /afs/cern.ch/work/d/dabercro/public/
+    89	12:00	ls /afs/cern.ch/work/d/dabercro/public/Spring15/
+    90	12:00	ls /afs/cern.ch/work/d/dabercro/public/Spring15/ReqMan2Tests/
+    91	12:00	ls /afs/cern.ch/work/d/dabercro/public/Winter15/
+    92	12:00	ls -lhtr /afs/cern.ch/work/d/dabercro/public/Winter15/
+    93	12:00	ls -lhtr /afs/cern.ch/work/d/dabercro/public/Winter15/MonoX/
+    94	12:00	ls -lhtr /afs/cern.ch/work/d/dabercro/public/Winter15/MonoX/monojet/
+    95	12:00	ls -lhtr /afs/cern.ch/work/d/dabercro/public/Winter15/MonoX/monojet/analysis/
+    96	12:00	ls -lhtr /afs/cern.ch/work/d/dabercro/public/Winter15/MonoX/monojet/analysis/MCConfig.txt
+    97	12:00	less /afs/cern.ch/work/d/dabercro/public/Winter15/MonoX/monojet/analysis/MCConfig.txt
+    98	12:01	less /afs/cern.ch/work/d/dabercro/public/Winter15/MonoX/monojet/analysis/SignalConfig.txt
+   100	12:12	exit
+   101	14:20	cd lnwork/Limits13TeV/CMSSW_7_1_5/src/
+   104	14:20	cd ~
+   105	14:20	cd lnwork/
+   108	14:20	mkdir ichep
+   109	14:20	cd ichep/
+   111	14:21	git@github.com:MiT-HEP/MonoX.git
+   113	14:31	git clone git@github.com:MiT-HEP/MonoX.git
+   115	14:42	cd MonoX/
+   117	14:42	cd monojet/
+   118	14:42	l
+   120	14:42	cd slimmer/
+   124	14:43	emacs -nw applyCorrections.py
+   127	14:43	git clone https://github.com/dabercro/CrombieTools.git
+   128	14:43	cd CrombieTools
+   130	14:44	cat install.sh
+   131	14:44	./install.sh
+   133	14:44	source /afs/cern.ch/user/z/zdemirag/.bashrc
+   136	14:45	cd ../slimmer/
+   139	14:45	cd files/
+   141	14:45	cat downloadurls.txt
+   142	14:46	cat downloadurls.txt | xargs wget
+   145	14:46	cd ../
+   150	14:47	mkdir -p /afs/cern.ch/work/z/zdemirag/public/Ichep/TempOut_fastsim
+   152	14:47	mkdir -p /afs/cern.ch/work/z/zdemirag/public/Ichep/FullOut_fastsim
+   154	14:48	mkdir -p /afs/cern.ch/work/z/zdemirag/public/Ichep/SkimOut_test
+   158	14:48	emacs -nw runSlimmer.py
+   159	14:48	emacs -nw NeroSlimmer.cc
+   161	14:49	less FlatSkimmer.sh
+   163	14:49	cat runSlimmer.py
+   171	14:53	python runSlimmer.py test
+   172	14:53	cat /afs/cern.ch/user/z/zdemirag/.bashrc
+   173	14:54	bash /afs/cern.ch/user/z/zdemirag/.bashrc
+   174	14:54	echo $CROMBIEPATH
+   175	14:54	ls /afs/cern.ch/user/z/zdemirag/lnwork/dan_setup/CrombieTools
+   179	15:00	emacs -nw CrombieSlimmingConfig.sh
+   180	15:01	emacs -nw CrombieScriptList.txt
+   181	15:01	eosmount eos
+   183	15:01	bash
+   187	15:33	emacs -nw FlatSkimmer.sh
+   188	15:33	fg
+   192	13:33	cd ~/lnwork/zeynep_setup/monojet13TeV/plotter/monoV/selection.py
+   193	13:33	cat ~/lnwork/zeynep_setup/monojet13TeV/plotter/monoV/selection.py
+   196	14:24	ls eos/
+   197	14:24	ls eos/cms/store/user/zdemirag/sync76x
+   198	14:24	mkdir eos/cms/store/user/zdemirag/sync76x
+   201	15:45	ls -lhtr ~/lnwork/Limits13TeV/CMSSW_7_1_5/src/MonoX-1/moriond/raffaele/Combined/
+   202	15:45	ls -lhtr ~/lnwork/Limits13TeV/CMSSW_7_1_5/src/MonoX-1/moriond/raffaele/Combined/g1/
+   203	15:46	ls -lhtr ~/lnwork/Limits13TeV/CMSSW_7_1_5/src/MonoX-1/moriond/raffaele/Combined/g1/vector/
+   204	15:46	ls -lhtr ~/lnwork/Limits13TeV/CMSSW_7_1_5/src/MonoX-1/moriond/raffaele/Combined/g1/vector/core*
+   205	15:46	rm -rf ~/lnwork/Limits13TeV/CMSSW_7_1_5/src/MonoX-1/moriond/raffaele/Combined/g1/vector/core*
+   206	15:46	ls -lhtr ~/lnwork/Limits13TeV/CMSSW_7_1_5/src/MonoX-1/moriond/raffaele/Combined/g1/vector/*.root
+   207	15:46	ls -lhtr ~/lnwork/Limits13TeV/CMSSW_7_1_5/src/MonoX-1/moriond/raffaele/Combined/g1/vector/workspace_MJ.root
+   208	15:46	ls -lhtr ~/lnwork/Limits13TeV/CMSSW_7_1_5/src/MonoX-1/moriond/raffaele/Combined/g1/vector/*.txt
+   209	15:47	less ~/lnwork/Limits13TeV/CMSSW_7_1_5/src/MonoX-1/moriond/raffaele/Combined/g1/vector/datacard_COMB.txt
+   210	15:47	ls -lhtr ~/lnwork/Limits13TeV/CMSSW_7_1_5/src/MonoX-1/moriond/raffaele/Combined/g1/vector/monoj_800_monojetcat.root
+   211	15:47	root -l ~/lnwork/Limits13TeV/CMSSW_7_1_5/src/MonoX-1/moriond/raffaele/Combined/g1/vector/monoj_800_monojetcat.root
+   212	15:47	ls eos/cms/store/user/zdemirag/
+   213	15:47	ls eos/cms/store/user/zdemirag/signal_scan/
+   214	15:47	ls eos/cms/store/user/zdemirag/signal_scan/templates_March8/
+   216	15:49	root -l eos/cms/store/user/zdemirag/signal_scan/templates_March8/MonoJ_800_1_catmonojet.root
+   217	15:49	ls ll eos/cms/store/user/zdemirag/signal_scan/templates_March8/*
+   218	15:51	ls ll eos/cms/store/user/zdemirag/signal_scan/templates_March8/*catmonov*
+   220	19:03	pwd
+   221	13:54	clear
+   223	14:01	ls -lhtr
+   224	14:01	kinit zdemirag@CERN.CH
+   225	14:02	ls
+   226	14:02	history
+   227	14:02	history > history.log
