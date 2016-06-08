@@ -72,11 +72,11 @@ for ientry in range(0,n_entries):
   n_n2lepcharge += 1
 
   #if not ((TMath.Abs(input_tree.dilep_m) - 91) < 30):
-  if not (input_tree.dilep_m > 60 and input_tree.dilep_m < 120 ):
+  if not (input_tree.dilep_m > 60 and input_tree.dilep_m < 120 ): 
     continue
   n_ndilep += 1
 
-  if not (TMath.Abs(input_tree.lep1PdgId)==13):
+  if not (TMath.Abs(input_tree.lep1PdgId)==11):
     continue
   n_nlepveto += 1
 
@@ -91,8 +91,6 @@ for ientry in range(0,n_entries):
   if not (input_tree.n_bjetsMedium == 0):
     continue
   n_nbjet += 1
-
-  print input_tree.runNum,input_tree.lumiNum,input_tree.eventNum
   
   if not (input_tree.jet1Pt > 100):
     continue
@@ -109,6 +107,7 @@ for ientry in range(0,n_entries):
   if not (input_tree.met > 200):
     continue
   n_nmet += 1
+
 
   if not (input_tree.fatjet1Pt > 250 and abs(input_tree.fatjet1Eta)<2.4 ):
     continue

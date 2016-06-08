@@ -38,9 +38,8 @@ else:
   raise SystemExit
 
 #initialize 
-n_njet=0; n_nmet=0; n_njetid=0; n_nlep=0; n_ntau=0; n_npho=0; n_dphi=0; n_nbjet=0;
-n_nlepveto=0; n_n2lepcharge=0; n_ndilep=0; n_nleptight=0;n_nmindphi=0;
-n_nfatjet=0; n_ntau21=0; n_npruned=0; n_nmet2=0;
+n_njet=0; n_nmet=0; n_njetid=0; n_nlep=0; n_ntau=0; n_npho=0; n_dphi=0; n_nbjet=0; n_nmindphi=0;
+n_nvbfjet=0; n_n12=0; n_deltan=0; n_mjj=0;
 
 # Check the number of entries in the tree
 n_entries = input_tree.GetEntriesFast()
@@ -59,26 +58,9 @@ for ientry in range(0,n_entries):
 
   #print 'INFO ------------------------ Event '+str(ientry)+' ------------------------ '
 
-  if not (input_tree.n_looselep == 2):
+  if not (input_tree.n_looselep == 0):
     continue
   n_nlep += 1
-
-  if not (input_tree.n_tightlep > 0):
-    continue
-  n_nleptight += 1
-
-  if not ((input_tree.lep1PdgId + input_tree.lep2PdgId) == 0):
-    continue
-  n_n2lepcharge += 1
-
-  #if not ((TMath.Abs(input_tree.dilep_m) - 91) < 30):
-  if not (input_tree.dilep_m > 60 and input_tree.dilep_m < 120 ):
-    continue
-  n_ndilep += 1
-
-  if not (TMath.Abs(input_tree.lep1PdgId)==13):
-    continue
-  n_nlepveto += 1
 
   if not (input_tree.n_loosepho == 0):
     continue
@@ -88,59 +70,56 @@ for ientry in range(0,n_entries):
     continue
   n_ntau += 1
 
+  #print input_tree.runNum,input_tree.lumiNum,input_tree.eventNum
+
   if not (input_tree.n_bjetsMedium == 0):
     continue
   n_nbjet += 1
-
-  print input_tree.runNum,input_tree.lumiNum,input_tree.eventNum
   
-  if not (input_tree.jet1Pt > 100):
+  #if not (input_tree.jet1Pt > 100):
+  if not (input_tree.jet1Pt > 100 and input_tree.jet1isMonoJetIdNew == 1):
     continue
   n_njet += 1
 
-  if not (input_tree.jet1isMonoJetIdNew == 1):
-    continue
-  n_njetid += 1
-
   if not (input_tree.minJetMetDPhi_withendcap > 0.5):
+  #if not (input_tree.minJetMetDPhi > 0.5):
     continue
   n_nmindphi += 1
 
-  if not (input_tree.met > 200):
+  if not (input_tree.trueMet > 200):
     continue
   n_nmet += 1
 
-  if not (input_tree.fatjet1Pt > 250 and abs(input_tree.fatjet1Eta)<2.4 ):
+  if not (input_tree.jot2Pt > 40 ):
     continue
-  n_nfatjet += 1
+  n_nvbfjet += 1
 
-  if not (input_tree.fatjet1tau21 < 0.6 ):
+  if not ((input_tree.jot1Eta * input_tree.jot2Eta) < 0):
     continue
-  n_ntau21 += 1
+  n_n12 += 1
 
-  if not (input_tree.fatjet1PrunedM > 65 and input_tree.fatjet1PrunedM < 105 ):
+  if not (abs(input_tree.jjDEta) > 3.5 ):
     continue
-  n_npruned += 1
+  n_deltan += 1
 
-  if not (input_tree.met > 250):
+  if not (input_tree.mjj > 500.):
     continue
-  n_nmet2 += 1
+  n_mjj += 1
 
-print 'INFO - Single Muon Cut Flow Chart: '
-print 'INFO - Full           '+ str(n_entries)
-print 'INFO - NLep Loose Cut '+ str(n_nlep)
-print 'INFO - NLep Tight Cut '+ str(n_nleptight)
-print 'INFO - Charge Cut     '+ str(n_n2lepcharge)
-print 'INFO - Dilep Cut      '+ str(n_ndilep)
-print 'INFO - NLep Veto Cut  '+ str(n_nlepveto)
-print 'INFO - NPho Cut       '+ str(n_npho)
-print 'INFO - NTau Cut       '+ str(n_ntau)
-print 'INFO - Nbjet          '+ str(n_nbjet)
-print 'INFO - Jet Cut        '+ str(n_njet)
-print 'INFO - Jet Id Cut     '+ str(n_njetid)
-print 'INFO - DPhi Cut       '+ str(n_nmindphi)
-print 'INFO - Met Cut        '+ str(n_nmet)
-print 'INFO - Fat Jet Pt Cut '+ str(n_nfatjet)
-print 'INFO - Tau21 Cut      '+ str(n_ntau21)
-print 'INFO - Pruned Cut     '+ str(n_npruned)
-print 'INFO - Met Cut        '+ str(n_nmet2)
+  print input_tree.runNum,input_tree.lumiNum,input_tree.eventNum,input_tree.jot1Pt,input_tree.jot1Eta,input_tree.jot2Pt,input_tree.jot2Eta,input_tree.mjj
+
+  
+print 'INFO - Signal Cut Flow Chart: '
+print 'INFO - Full     '+ str(n_entries)
+print 'INFO - NLep Cut '+ str(n_nlep)
+print 'INFO - NPho Cut '+ str(n_npho)
+print 'INFO - NTau Cut '+ str(n_ntau)
+print 'INFO - Nbjet    '+ str(n_nbjet)
+print 'INFO - Jet Cut  '+ str(n_njet)
+print 'INFO - Jet Id Cut  '+ str(n_njetid)
+print 'INFO - DPhi Cut '+ str(n_nmindphi)
+print 'INFO - Met Cut  '+ str(n_nmet)
+print 'INFO - VBF Jet Pt Cut '+ str(n_nvbfjet)
+print 'INFO - Eta1Eta2 Cut   '+ str(n_n12)
+print 'INFO - DeltaEta Cut   '+ str(n_deltan)
+print 'INFO - Mjj Cut        '+ str(n_mjj)
