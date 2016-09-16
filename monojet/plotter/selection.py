@@ -3,43 +3,65 @@ def build_selection(selection,bin0):
     selections = ['signal','Zmm','Wmn','gjets','Zee','Wen']
     
     snippets = {
+
+        #test
+        #'runnumber'      :['runNum<274240',selections],
+        #'npv'            :['npv>=18',selections],
+        #'deltaPhi'       :['abs(minJetMetDPhi) > 0.5',['signal','Zmm','Wmn','gjets','Wen','Zee']],
+        #'njet'           :['n_cleanedjets==2',selections],
+        #'jet substrcuture' :['!(fatjet1tau21 < 0.6) ',selections], 
+        #'mass'             :['!(fatjet1PrunedM > 65 && fatjet1PrunedM < 105)',selections],
+
         
-        #** monojet
-        'leading jet pT' :['jet1Pt>100.',selections],
-        'leading jet eta':['abs(jet1Eta)<2.5',selections],        
-#        'not monoV'      :['fatjet1PrunedM < 60 || fatjet1PrunedM > 110 || fatjet1tau21 > 0.5',selections],
-        # Jet ID
-        'jet cleaning'   :['jet1isMonoJetIdNew==1',selections],      
-        'deltaPhi'       :['abs(minJetMetDPhi_withendcap)>0.5',['signal','Zmm','Wmn','Wen','gjets']],
-        #'deltaPhi'       :['abs(minJetMetDPhi_clean)>0.65',['signal','Zmm','Wmn','Wen','gjets']],
-        'tau veto'       :['n_tau==0',['signal','Zmm','Wmn','Wen','Zee']], 
+        #monojet        
+        #'noisecleaning'  :['metfilter==1 ',selections],
+        #'noisecleaning'  :['metfilter==1 && filterbadChCandidate==1 && filterbadPFMuon==1',selections],
+        #'leading jet pT' :['jet1Pt>100.',selections],
+        #'leading jet eta':['abs(jet1Eta)<2.5',selections],        
+        #'leading jet eta':['abs(jet1Eta)<2.4',selections],        
+        #'jet cleaning'   :['jet1isMonoJetIdNew==1',selections],      
+        #'deltaPhi'       :['abs(minJetMetDPhi_withendcap) > 0.5',['signal','Zmm','Wmn','gjets','Wen','Zee']],
+        #'jetoutaccp'     :['leadingJet_outaccp==0',selections],
+        #'monoveto'       :['!(fatjet1Pt>250. && fatjet1tau21 < 0.6 && fatjet1PrunedM > 65 && met > 250. && fatjet1PrunedM < 105 && abs(fatjet1Eta)<2.4)',selections],
+        
+        #monoV
+        'leading jet pT'   :['fatjet1Pt>250.',selections],
+        'jet cleaning'     :['jet1isMonoJetIdNew==1',selections],      
+        'leading jet eta'  :['abs(fatjet1Eta)<2.4',selections],                                                      
+        'jet substrcuture' :['fatjet1tau21 < 0.6 ',selections], 
+        'mass'             :['fatjet1PrunedM > 65 && fatjet1PrunedM < 105',selections],
+        'deltaPhi'         :['abs(minJetMetDPhi_withendcap) > 0.5',['signal','Zmm','Wmn','gjets','Wen','Zee']],
+        'jetoutaccp'       :['leadingJet_outaccp==0',selections],
+        
+        #vbf
+        #'deltaPhi'       :['abs(minJetMetDPhi_withendcap) > 0.5',['signal','Zmm','Wmn','gjets','Wen']],
+        #'jet pT'         :['jot1Pt>100. && jot2Pt > 40. && abs(jot1Eta)<4.7 && abs(jot2Eta)<4.7',selections],
+        #'jetoutaccp'     :['leadingJet_outaccp==1',selections],
+        #'jet eta'        :['jot1Eta*jot2Eta < 0',selections],
+        #'detajj'         :['abs(jjDEta) > 3.0',selections],
+
+        ####
+        #'mjj'        :['mjj>500.',selections],
+        #'isVBF'      :['IsVBF==1',selections],        
+        
+        ##########
+        
+        'track cleaning' :['(abs(caloMet-trueMet)/met) < 0.5',selection],
+        'tau veto'       :['n_tau==0',selections], 
+        'btag veto'      :['n_bjetsMedium==0',selections],
         'lepton veto'    :['n_looselep==0',['signal','gjets']],
         'pho veto'       :['n_loosepho==0',['signal','Zmm','Wmn','Zee','Wen']],
-        'btag veto'      :['n_bjetsMedium==0',selections],
-        
-        #'bins' : ['met<250.',selections],
-        
+                
         #** Control Regions
-
-        'triggerSig' : ['(triggerFired[0]==1 || triggerFired[1]==1 || triggerFired[2]==1)',['signal','Zmm','Wmn']],        
-        'triggerE' : ['(triggerFired[4]==1 || triggerFired[5]==1)',['Zee','Wen']],        
-        'triggerG' : ['(triggerFired[11]==1 || triggerFired[12]==1 || triggerFired[13]==1)',['gjets']],
-        'leading lep ID': ['n_tightlep > 0',['Wmn','Zmm','Wen','Wee']], 
-        'Zmm'  : ['n_looselep == 2 && abs(dilep_m - 91) < 30 && (lep1PdgId*lep2PdgId == -169)',['Zmm']],
+        'leading lep ID': ['n_tightlep > 0',['Wmn','Zmm','Wen','Zee']], 
+        #'Zmm'  : ['n_looselep == 2 && abs(dilep_m - 91) < 30 && (lep1PdgId*lep2PdgId == -169) && lep2Pt > 20. && lep1Pt>25.',['Zmm']],
+        'Zmm'  : ['n_looselep == 2 && abs(dilep_m - 91) < 30 && (lep1PdgId*lep2PdgId == -169) ',['Zmm']],
         'Zee'  : ['n_looselep == 2 && abs(dilep_m - 91) < 30 && (lep1PdgId*lep2PdgId == -121)',['Zee']],
-        'Wmn'  : ['n_looselep == 1 && abs(lep1PdgId)==13 ',['Wmn']],
-        'Wen'  : ['n_looselep == 1 && abs(lep1PdgId)==11 && trueMet>40.',['Wen']],
-
+        'Wmn'  : ['n_looselep == 1 && abs(lep1PdgId)==13 && mt<160',['Wmn']],
+        'Wen'  : ['n_looselep == 1 && abs(lep1PdgId)==11 && trueMet>50. && mt<160.',['Wen']], 
         'gjets': ['photonPt > 175 && abs(photonEta) < 1.4442 && n_mediumpho == 1 && n_loosepho == 1',['gjets']],                
-        #'excitedquark' : ['n_cleanedjets==3',['gjets']],
-
-        # monov
-#        'monoV'    : ['fatjet1tau21 < 0.5 && fatjet1PrunedM > 60 && fatjet1PrunedM < 110',selections],
-#        'monoVId'  : ['fatleading == 1 && fatjet1overlapB < 2',selections],
-#        'monoVKin' : ['fatjet1Pt > 250 && fatjet1Eta < 2.5',selections]
-        
-        }
-
+       }
+    
     selectionString = ''
     for cut in snippets:
         if selection in snippets[cut][1]: 
@@ -54,3 +76,31 @@ def build_selection(selection,bin0):
 
     return selectionString
 
+
+# [0] HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v,
+# [1] HLT_Ele23_WPLoose_Gsf_v,
+# [2] HLT_Ele27_WPLoose_Gsf_v,
+# [3] HLT_IsoTkMu20_v,
+# [4] HLT_IsoMu24_v,
+# [5] HLT_Mu50_v,
+# [6] HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v,
+# [7] HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v,
+# [8] HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v,
+# [9] HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v,
+#[10] HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v,
+#[11] HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v,
+#[12] HLT_PFMET120_NoiseCleaned_BtagCSV0p72,
+#[13] HLT_PFMET170_NoiseCleaned_v,
+#[14] HLT_PFMET170_NotCleaned_v,
+#[15] HLT_PFMETNoMu90_PFMHTNoMu90_IDTight_v,
+#[16] HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v,
+#[17] HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v,
+#[18] HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v,
+#[19] HLT_Photon175_v,
+#[20] HLT_Photon165_HE10_v,
+#[21] HLT_PFHT400_SixJet30_BTagCSV0p55_2PFBTagCSV0p72_v,
+#[22] HLT_PFHT450_SixJet40_PFBTagCSV0p72_v,
+#[23] HLT_PFHT750_4JetPt50_v,HLT_PFHT650_v, --> Bug HERE!
+#[24] HLT_PFHT800_v,
+#[25] HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV0p45_v,
+#[26] HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV0p45_v

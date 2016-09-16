@@ -11,7 +11,7 @@ def addCorr(name,expr,cut,fileName,histName):
     applicator.AddCorrector(Corrector.MakeCorrector(name,expr,cut,fileName,histName))
 ##
 
-addCorr('puWeight','npv','1','files/new_puWeights_13TeV_25ns.root','puWeights')
+addCorr('puWeight','npv','1','files/puWeights_76x.root','puWeights')
 addCorr('purityWeight','photonPt','1','files/Purity.root','purity')
 
 ## Loose electron
@@ -51,20 +51,20 @@ ewk_a = Corrector.MakeCorrector('ewk_a','genBos_pt','genBos_PdgId == 22','files/
 ewk_z = Corrector.MakeCorrector('ewk_z','genBos_pt','abs(genBos_PdgId) == 23','files/scalefactors_v4.root','z_ewkcorr/z_ewkcorr')
 ewk_w = Corrector.MakeCorrector('ewk_w','genBos_pt','abs(genBos_PdgId) == 24','files/scalefactors_v4.root','w_ewkcorr/w_ewkcorr')
 
-kfactor  = Corrector.MakeCorrector('kfactor','genBos_pt','genBos_PdgId == 22','files/scalefactors_v4.root','anlo1_over_alo/anlo1_over_alo')
+akfactor = Corrector.MakeCorrector('akfactor','genBos_pt','genBos_PdgId == 22','files/scalefactors_v4.root','anlo1_over_alo/anlo1_over_alo')
 zkfactor = Corrector.MakeCorrector('zkfactor','genBos_pt','abs(genBos_PdgId) == 23','files/scalefactors_v4.root',['znlo012/znlo012_nominal','zlo/zlo_nominal'])
 wkfactor = Corrector.MakeCorrector('wkfactor','genBos_pt','abs(genBos_PdgId) == 24','files/scalefactors_v4.root',['wnlo012/wnlo012_nominal','wlo/wlo_nominal'])
 
 applicator.AddCorrector(ewk_a)
 applicator.AddCorrector(ewk_z)
 applicator.AddCorrector(ewk_w)
-applicator.AddCorrector(kfactor)
+applicator.AddCorrector(akfactor)
 applicator.AddCorrector(zkfactor)
 applicator.AddCorrector(wkfactor)
 
 a_ = { 'cut'   : 'genBos_PdgId == 22',
        'list'  : ['GJets'],
-       'apply' : [ewk_a,kfactor] }
+       'apply' : [ewk_a,akfactor] }
 z_ = { 'cut'   : 'abs(genBos_PdgId) == 23',
        'list'  : ['DYJets','ZJets'],
        'apply' : [ewk_z,zkfactor] }
@@ -77,7 +77,7 @@ for fileName in os.listdir(directory):
         continue
     ##
 
-    for corrector in [ewk_a,ewk_z,ewk_w,kfactor,zkfactor,wkfactor]:
+    for corrector in [ewk_a,ewk_z,ewk_w,akfactor,zkfactor,wkfactor]:
         corrector.SetInCut('runNum == 0')
     ##
 

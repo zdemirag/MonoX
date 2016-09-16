@@ -221,8 +221,8 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
     leptonVecs.resize(0);
     photonVecs.resize(0);
 
-    if (iEntry % 10000 == 0)
-      std::cout << "Processing events: ... " << float(iEntry)/float(nentries)*100 << "%" << std::endl;
+    if (iEntry % 1000 == 0)
+        std::cout << "Processing events: ... " << float(iEntry)/float(nentries)*100 << "%" << std::endl;
     
     inTree->GetEntry(iEntry);
     
@@ -244,23 +244,41 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
         outTree->mcWeight = 1;
     }
 
+    //**** Some common eff working points ****//
+    //tracking eff
+    //outTree->trackWeight = ;
+    
+    //12.9/fb pu reweight
+    //outTree->puWeight = ;
+
+
     outTree->trueMet    = ((TLorentzVector*)((*(inTree->metP4))[0]))->Pt();
     outTree->trueMetPhi = ((TLorentzVector*)((*(inTree->metP4))[0]))->Phi();
 
     outTree->rawMet    = ((TLorentzVector*)((*(inTree->metP4))[0]))->Pt();
     outTree->rawMetPhi = ((TLorentzVector*)((*(inTree->metP4))[0]))->Phi();
  
+    outTree->caloMet    = inTree->caloMet_Pt;
     outTree->trackMet   = inTree->trackMet->Pt();
     outTree->neutralMet = inTree->neutralMet->Pt();
     outTree->photonMet  = inTree->photonMet->Pt();
     outTree->HFMet      = inTree->HFMet->Pt();
+    //outTree->PuppiMet   = inTree->metPuppi->Pt();
 
     outTree->triggerFired = inTree->triggerFired;
     outTree->metfilter  = ((inTree->filterSelBits & FullRecommendation) == FullRecommendation);
     outTree->halofilter2015  = ((inTree->filterSelBits & CSCTightHalo2015Filter) == CSCTightHalo2015Filter);
     outTree->halofilter2016  = ((inTree->filterSelBits & GlobalTightHalo2016) == GlobalTightHalo2016);
+    outTree->filterbadChCandidate = inTree->filterbadChCandidate;
+    outTree->filterbadPFMuon = inTree->filterbadPFMuon;
+
 
     //// Here is the lepton filling ////
+    if (inTree->eleP4_smear->GetEntries() >0){
+        TLorentzVector* smearEle = (TLorentzVector*) inTree->eleP4_smear->At(0);
+        outTree->eleSmearedPt = smearEle->Pt();
+    }
+
 
     for (Int_t iLepton = 0; iLepton < inTree->lepP4->GetEntries(); iLepton++) {
       TLorentzVector* tempLepton = (TLorentzVector*) inTree->lepP4->At(iLepton);
@@ -376,12 +394,17 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
       outTree->boson_pt  = outTree->met;
       outTree->boson_phi = outTree->metPhi;
     }
-    
+
+    //Leading photon pt of the smeared collection
+    if (inTree->phoP4_smear->GetEntries() >0){
+        TLorentzVector* smearPho = (TLorentzVector*) inTree->phoP4_smear->At(0);
+        outTree->phoSmearedPt = smearPho->Pt();    
+    }
+
     //// Now we go on to look at photons ////
-    
     for (Int_t iPhoton = 0; iPhoton < inTree->photonP4->GetEntries(); iPhoton++) {
       TLorentzVector* tempPhoton = (TLorentzVector*) inTree->photonP4->At(iPhoton);
-      
+
       //// Set photon cuts at some pt and eta ////
 
       if (tempPhoton->Pt() < 15. || fabs(tempPhoton->Eta()) > 2.5
@@ -428,7 +451,9 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
         }
       }
     }
+   
     
+
     //// If we're in signal selection, fill MET, otherwise, fill recoil vars ////
 
     if (outTree->met < 0) {
@@ -441,8 +466,8 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
     }
 
     // Place met cut here //
-    if (outTree->met < 50) {
-    //if (outTree->met < 100) {
+    //if (outTree->met < 50) {
+    if (outTree->met < 170) {
       outTree->Reset();
       continue;
     }
@@ -483,6 +508,9 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
         }
       }
       
+      if (!(((*(inTree->jetSelBits))[iJet] & JetLoose) == JetLoose))
+        continue;
+
       //if (match == false && tempJet->Pt() > 30.0 && PassPuId(tempJet->Pt(), tempJet->Eta(),(*(inTree->jetPuId))[iJet], kpuMedium) ) {
       if (match == false && tempJet->Pt() > 30.0 ) {
         outTree->n_jetsCleanWithEndcap++;
@@ -505,14 +533,12 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
       //// Ignore jets that are not in this region ////
       //if (fabs(tempJet->Eta()) > 2.4 || (*(inTree->jetPuId))[iJet] < -0.62 || tempJet->Pt() < 15.0)
 
-      if (fabs(tempJet->Eta()) > 2.5 || tempJet->Pt() < 15.0)
+      //if (fabs(tempJet->Eta()) > 2.5 || tempJet->Pt() < 15.0)
+      if (fabs(tempJet->Eta()) > 2.4 || tempJet->Pt() < 15.0)
         continue;
 
       //if (!PassPuId(tempJet->Pt(), tempJet->Eta(),(*(inTree->jetPuId))[iJet], kpuMedium))
       //  continue;
-
-      if (!(((*(inTree->jetSelBits))[iJet] & JetLoose) == JetLoose))
-        continue;
 
       //// Count jets for b-tagging ////
       
@@ -614,6 +640,10 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
 
           outTree->jet1QGL    = (*(inTree->jetQGL))[iJet];
           outTree->jet1Flavor = (*(inTree->jetFlavour))[iJet];
+          
+          outTree->jet1nhef   = (*(inTree->jetnhef))[iJet];
+          outTree->jet1chef   = (*(inTree->jetchef))[iJet];
+
       }
       
       else if (outTree->n_cleanedjets == 2) {
@@ -690,10 +720,21 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
       
       Bool_t isFound = false;
       
+      float pt1 = -0.5;
+      float pt2 = -0.5;
+
       for (Int_t iGen = 0; iGen < inTree->genP4->GetEntries(); iGen++) {
         TLorentzVector* tempGen = (TLorentzVector*) inTree->genP4->At(iGen);
         Int_t checkPdgId = abs((*(inTree->genPdgId))[iGen]);
+        Int_t checkPdgId2 = ((*(inTree->genPdgId))[iGen]);
       
+        if (abs(checkPdgId2) == 6){
+            if (checkPdgId2 > 0)
+                pt1 = ((TLorentzVector*)inTree->genP4->At(iGen))->Pt();
+            if (checkPdgId2 < 0)
+                pt2 = ((TLorentzVector*)inTree->genP4->At(iGen))->Pt();            
+        }
+
         if (checkPdgId == 25){
           outTree->genDM_pt = tempGen->Pt();
           outTree->genDM_eta = tempGen->Eta();
@@ -717,24 +758,49 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
           }
         }
   
-        if ((checkPdgId != 11 && checkPdgId != 13 && checkPdgId != 22) && !(outTree->boson_pt < 0 && (checkPdgId == 23 || checkPdgId == 24)))
-          continue;
-        
+        //if ((checkPdgId != 11 && checkPdgId != 13 && checkPdgId != 22) && !(outTree->boson_pt < 0 && (checkPdgId == 23 || checkPdgId == 24))){
+        //   std::cout << "didn't pass one of the gen cuts" << std::endl;
+        //    continue;       
+        //}
         //// Look for two leptons here ////
+
+        //std::cout << "Did I found a boson: " << checkPdgId <<  " " << tempGen->Pt() <<std::endl;
+
         if (outTree->n_looselep > 1) {
-          if (outTree->lep2Pt > 0 && outTree->lep1PdgId + outTree->lep2PdgId == 0 && checkPdgId % 2 == 1) {
+
+          if (checkPdgId==23 && tempGen->Pt()>5) {
+              outTree->genBos_PdgId = 23;
+              saveGenVec = *tempGen;
+              break;
+          }
+
+          else if (outTree->lep2Pt > 0 && outTree->lep1PdgId + outTree->lep2PdgId == 0 && checkPdgId % 2 == 1) {
+              
+              //float lep1dR = deltaR(tempGen->Phi(),tempGen->Eta(),outTree->lep1Phi,outTree->lep1Eta);
+              //float lep2dR = deltaR(tempGen->Phi(),tempGen->Eta(),outTree->lep2Phi,outTree->lep2Eta);
+            
+            //std::cout << "lep found" << lep1dR << " " << lep2dR << " checking dR  " << std::endl;
+
             if (deltaR(tempGen->Phi(),tempGen->Eta(),outTree->lep1Phi,outTree->lep1Eta) < dRGenMatch ||
                 deltaR(tempGen->Phi(),tempGen->Eta(),outTree->lep2Phi,outTree->lep2Eta) < dRGenMatch) {
-              if (saveGenVec.Pt() > 5) {
-                outTree->genBos_PdgId = 23;
-                saveGenVec = saveGenVec + *tempGen;
-                break;
-              }
-              else
-                saveGenVec = *tempGen;
+                if (saveGenVec.Pt() > 5) {
+                    outTree->genBos_PdgId = 23;
+                    saveGenVec = saveGenVec + *tempGen;
+                    break;
+                }
             }
+            else
+                saveGenVec = *tempGen;
+            
           }
+
+          //std::cout << "gen boson pt: " << saveGenVec.Pt() << std::endl;
+      
+
+
         }
+        
+
         //// Look for 'W' here ////
         else if (outTree->n_looselep == 1) {
           if (outTree->lep1Pt > 0 && checkPdgId % 2 == 1) {
@@ -765,11 +831,19 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
         }
       }
 
+
       outTree->genBos_pt   = saveGenVec.Pt();
       outTree->genBos_eta  = saveGenVec.Eta();
       outTree->genBos_phi  = saveGenVec.Phi();
       outTree->genBos_mass = saveGenVec.M();
+
+      if (pt1 > 0.0 && pt2 > 0.0)
+          outTree->topPtReweighting = sqrt(exp(0.156 - 0.00137*min(pt1,float(400.0))) *
+                                           exp(0.156 - 0.00137*min(pt2,float(400.0)))) / 0.88; 
+
     }
+    //std::cout << "gen boson pt: " << outTree->genBos_pt << std::endl;
+
 
     for (Int_t iFatJet = 0; iFatJet < inTree->fatjetAK8CHSP4->GetEntries(); iFatJet++) {
       TLorentzVector* tempFatJet = (TLorentzVector*) inTree->fatjetAK8CHSP4->At(iFatJet);
@@ -798,15 +872,14 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
         outTree->fatjet1Eta  = tempFatJet->Eta();
         outTree->fatjet1Phi  = tempFatJet->Phi();
         outTree->fatjet1Mass = tempFatJet->M();
-        //outTree->fatjet1TrimmedM  = (*(inTree->fatjetAK8CHSTrimmedMass))[iFatJet];
-        //outTree->fatjet1PrunedM   = (*(inTree->fatjetAK8CHSPrunedMass))[iFatJet];
+        outTree->fatjet1PrunedML2L3   = (*(inTree->fatjetAK8CHSCorrectedPrunedMass))[iFatJet];
         //minioad saves raw pruned mass, to correct it multiplying it with the corrected jet pt / raw jet pt
         outTree->fatjet1PrunedM   = (*(inTree->fatjetAK8CHSPrunedMass))[iFatJet] * tempFatJet->Pt() / (*(inTree->fatjetAK8CHSRawPt))[iFatJet];
-        //outTree->fatjet1FilteredM = (*(inTree->fatjetAK8CHSFilteredMass))[iFatJet];
-        outTree->fatjet1SoftDropM = (*(inTree->fatjetAK8CHSSoftdropMass))[iFatJet];
+        //outTree->fatjet1SoftDropM_puppi = (*(inTree->fatjetAK8CHSPuppiSoftdropMass))[iFatJet];
         outTree->fatjet1tau1  = (*(inTree->fatjetAK8CHSTau1))[iFatJet];
         outTree->fatjet1tau2  = (*(inTree->fatjetAK8CHSTau2))[iFatJet];
         outTree->fatjet1tau21 = outTree->fatjet1tau2/outTree->fatjet1tau1;
+        //outTree->fatjet1tau21_puppi = ((*(inTree->fatjetAK8CHSPuppiTau1))[iFatJet]/(*(inTree->fatjetAK8CHSPuppiTau2))[iFatJet]);
 
         // outTree->fatjet1MonojetId = (*(inTree->fatjetAK8CHSMonojetid))[iFatJet];
 

@@ -9,19 +9,26 @@ OutTreeName = 'MonoJetTree'
 os.system(os.environ['CROMBIEPATH'] + '/scripts/MakeTree.sh ' + OutTreeName)
 ROOT.gROOT.LoadMacro(OutTreeName + '.cc+')
 
-ROOT.gROOT.LoadMacro('NeroTree76.C+')
+#ROOT.gROOT.LoadMacro('NeroTree76.C+')
+#ROOT.gROOT.LoadMacro('testZeynep.C+')
+ROOT.gROOT.LoadMacro('Nero_80x.C+')
 ROOT.gROOT.LoadMacro('NeroSlimmer.cc+')
 
 if sys.argv[1] == "test":
     ROOT.NeroSlimmer(
-#        "root://eoscms//eos/cms/store/user/dabercro/Nero/v1.2/MET/MET-Run2015D-v4/160216_152458/0000/NeroNtuples_2.root",
-#        "root://eoscms//eos/cms/store/user/dabercro/Nero/v1.2/DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/DYJetsToLL_M-50_HT-100to200/160216_150808/0000/NeroNtuples_31.root",
-#        "root://eoscms//eos/cms/store/user/dabercro/Nero/v1.2/VBF_HToInvisible_M125_13TeV_powheg_pythia8/VBF_HToInvisible_M125_13TeV/160216_151800/0000/NeroNtuples_1.root",
-        "root://eoscms//eos/cms/store/user/zdemirag/fastsim/monojet_med-2000_dm-100_proc-801_g-1.0/nero_0000.root",
-#        "/scratch3/ceballos/hist/monov_all/t2mit/filefi/043/VectorMonoW_Mphi-50_Mchi-10_gSM-1p0_gDM-1p0_13TeV-madgraph+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM/nero_0000.root",
-        "test.root")
+        "eos/cms/store/group/phys_exotica/monojet/zdemirag/setup80x/Nero/zey_base/SingleElectron/SingleElectron-Run2016B-v2_Missing/160713_150938/0000/NeroNtuples_19.root",
+        #"eos/cms/store/group/phys_exotica/monojet/zdemirag/setup80x/Nero/zey_base/DMV_NNPDF30_Axial_Mphi-1500_Mchi-10_gSM-0p25_gDM-1p0_v2_13TeV-powheg/DMV_NNPDF30_Axial_Mphi-1500_Mchi-10_gSM-0p25_gDM-1p0/160710_100053/0000/NeroNtuples_1.root",
+        #"eos/cms/store/group/phys_exotica/monojet/zdemirag/setup80x/Nero/zey_base/MET/MET-Run2016B-v2/160709_170419/0000/NeroNtuples_1.root",
+        "new_test.root"
+        #"eos/cms/store/user/zdemirag/setup80x/Nero/zey_base/DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/DYJetsToLL_M-50_HT-600toInf/160606_230225/0000/NeroNtuples_7.root",
+        #"dy_test.root"
+        #"eos/cms/store/user/zdemirag/setup80x/Nero/Data/zey_base/SingleElectron/SingleElectron-Run2016B-v2/160620_201710/0000/NeroNtuples_Photon_278.root",
+        #"missing_ele_6.root"
+        )
+
 elif sys.argv[1] == "compile":
     exit()
+
 else:
     if not os.path.isfile(sys.argv[2]):
         try:

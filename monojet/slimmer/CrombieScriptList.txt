@@ -1,5 +1,5 @@
 MonoJetTree.txt
-NeroTree76.h
-NeroTree76.C
+Nero_80x.h
+Nero_80x.C
 functions.h
 NeroSlimmer.cc

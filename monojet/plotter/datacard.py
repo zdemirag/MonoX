@@ -1,8 +1,5 @@
 import sys, os, string, re
 
-if not os.path.exists('datacards'):
-    os.mkdir('datacards')
-
 def dump_datacard(channel,yields_dic):
     nprocess = 0
     yields_slim = {}
@@ -11,7 +8,7 @@ def dump_datacard(channel,yields_dic):
         if process not in 'data' and process not in 'signal':
             yields_slim[process]=yields_dic[process]
             
-    datacard = open('datacards/datacard_'+channel+'.txt', 'w')
+    datacard = open('datacard_'+channel+'.txt', 'w')
     datacard.write('')
     datacard.write( 'imax 1 number of bins \n') 
     datacard.write( 'jmax '+str(nprocess-2)+' number of processes minus 1 \n') # -1 for data

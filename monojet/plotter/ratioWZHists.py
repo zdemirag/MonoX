@@ -41,7 +41,7 @@ plotter.SetCanvasSize(600,700)
 plotter.SetAxisMinMax(0.055,0.18)
 plotter.SetRatioMinMax(0.0,2.0)
 
-directory = '/afs/cern.ch/work/d/dabercro/public/Winter15/SkimOut_160212/'
+directory = '/afs/cern.ch/work/z/zdemirag/public/ichep/setup80x/Skim_v3/'
 
 uncFile_ewk = TFile('/afs/cern.ch/user/z/zdemirag/public/forDan/wtoz_ewkunc.root')
 uncFile     = TFile('/afs/cern.ch/user/z/zdemirag/public/forDan/wtoz_unc.root')
@@ -56,9 +56,9 @@ uncertainties = [
 outDir = '~/www/monoV_160222/'
 #outDir = '~/public/dump/'
 
-gammaMCFile = TFile(directory + 'merged/monojet_WJets.root')
+gammaMCFile = TFile(directory + 'monojet_WJetsToLNu_Pt.root')
 print gammaMCFile.GetName()
-zeeMCFile   = TFile(directory + 'merged/monojet_DY.root')
+zeeMCFile   = TFile(directory + 'monojet_DYJetsToLL_M-50.root')
 print zeeMCFile.GetName()
 dataFile    = TFile(directory + 'monojet_Data.root')
 print dataFile.GetName()

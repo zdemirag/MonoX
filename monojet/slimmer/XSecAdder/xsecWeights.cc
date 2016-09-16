@@ -19,11 +19,11 @@ void xsecWeights (TString dir, TString filename = "monojet_WJetsToLNu_HT-600ToIn
   TTree *tree = (TTree*) file->FindObjectAny("events");
   TH1F  *allHist = (TH1F*) file->FindObjectAny("htotal");
 
-  if (!tree->GetBranch("XSecWeight") && xsec > 0) {
+  if (!tree->GetBranch("XSecWeight2") && xsec > 0) {
 
-    Float_t XSecWeight = 1.;
-    TBranch *XSecWeightBr = tree->Branch("XSecWeight",&XSecWeight,"XSecWeight/F");
-    std::cout << XSecWeightBr << std::endl;
+    Float_t XSecWeight2 = 1.;
+    TBranch *XSecWeight2Br = tree->Branch("XSecWeight2",&XSecWeight2,"XSecWeight2/F");
+    std::cout << XSecWeight2Br << std::endl;
 
     int numEntries = tree->GetEntriesFast();
     Float_t mostWeight = xsec/allHist->GetBinContent(1) * 1000;
@@ -31,8 +31,8 @@ void xsecWeights (TString dir, TString filename = "monojet_WJetsToLNu_HT-600ToIn
     for (int entry = 0; entry < numEntries; entry++) {
       if (entry % 500000 == 0)
         std::cout << "Processing... " << float(entry)/float(numEntries)*100 << "%" << std::endl;
-      XSecWeight =  mostWeight;
-      XSecWeightBr->Fill();
+      XSecWeight2 =  mostWeight;
+      XSecWeight2Br->Fill();
     }
   }
   else {

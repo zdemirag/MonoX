@@ -2,6 +2,16 @@ from ROOT import TColor
 
 color_codes = {}
 
+color_codes['pascolors'] = {
+    1001     :"#4897D8", #diboson
+    1002     :"#9A9EAB", #gjets
+    1003     :"#F1F1F2", #qcd
+    1004     :"#CF3721", #top
+    1005     :"#9A9EAB", #zll
+    1006     :"#FAAF08", #wjets
+    1007     :"#258039"  #zjets   
+    }
+
 
 color_codes['zeynep2'] = {1001:[37, 62, 102],
                          1002: [194, 157, 78],
@@ -18,6 +28,10 @@ color_codes['zeynep'] = {1001: [215,75,75],
                          1005: [48, 135, 180],
                          1006: [100, 68, 54],
                          1007: [116, 130, 143],
+                         1008: [245,105,105],
+                         1009: [78, 165, 210],                         
+                         1010: [175, 116, 3],
+                         1011: [205, 146, 23],
                          }
 
 color_codes['david'] = {1001: [221, 30, 47],
@@ -56,12 +70,13 @@ color_codes['africa'] = {1001: [236,128,92],
                          }
 
 
-def defineColors(color_code='zeynep'):
+def defineColors(color_code='pascolors'):
     colors = {}
     rgb=255.
     for color_number in color_codes[color_code]:
-        colors[color_number] = TColor(color_number,
-                                      color_codes[color_code][color_number][0]/rgb,
-                                      color_codes[color_code][color_number][1]/rgb,
-                                      color_codes[color_code][color_number][2]/rgb,)
+    #    colors[color_number] = TColor(color_number,
+    #                                  color_codes[color_code][color_number][0]/rgb,
+    #                                  color_codes[color_code][color_number][1]/rgb,
+    #                                  color_codes[color_code][color_number][2]/rgb,)
+        colors[color_number] =  color_codes[color_code][color_number]
     return colors

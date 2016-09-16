@@ -32,10 +32,11 @@ def plot_ratio(pull,data,mc,bin,xlabel,low,high,division):
         Pull.Divide(mc)
         Pull.SetMaximum(high)
         Pull.SetMinimum(low)
-        Pull.GetYaxis().SetTitle('kfactor')
+        Pull.GetYaxis().SetTitle('Ratio')
         Pull.SetMarkerColor(1)
         Pull.SetLineColor(1)
         Pull.Draw("e")
+        print 'Done'
 
 
 def plot_cms(preliminary,lumi):

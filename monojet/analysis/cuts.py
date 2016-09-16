@@ -1,124 +1,135 @@
-categories = ['monoJet_inc','monoV','monoJet']
+categories = ['monoJet_inc','monoV','monoJet','vbf']
 regions    = ['signal','Zmm','Zee','Wmn','Wen','gjets']
 
-allCut = 'n_tau == 0 && abs(minJetMetDPhi_clean) > 0.5 && leadingJet_outaccp == 0'
-zeeAll = 'n_tau == 0 && leadingJet_outaccp == 0'
-metCut = 'met > 200'
+metfilter_real = 'metfilter==1 && filterbadChCandidate==1 && filterbadPFMuon==1'
+metfilter = 'metfilter==1 && filterbadChCandidate==1 && filterbadPFMuon==1'
+#metfilter      = '(1.0)'
 
-bVeto = 'n_bjetsMedium == 0'
-photonVeto = 'n_loosepho == 0'
-leptonVeto = 'n_looselep == 0'
-diLepton = 'n_looselep == 2 && abs(dilep_m - 90) < 30 && n_tightlep > 0'
-singleLepton = 'n_looselep == 1 && n_tightlep == 1'
-singlePhoton = 'photonPt > 175 && abs(photonEta) < 1.4442 && n_mediumpho == 1 && n_loosepho == 1'
+balance = '(abs(caloMet-trueMet)/met) < 0.5'
 
-METTrigger = '(triggerFired[0]==1 || triggerFired[1]==1 || triggerFired[2]==1)'
-GTrigger   = '(triggerFired[11]==1 || triggerFired[12]==1 || triggerFired[13]==1)'
-ETrigger   = '((triggerFired[4]==1 || triggerFired[5]==1) || ' + GTrigger + ')'
-MuTrigger  = '(triggerFired[8]==1 || triggerFired[9]==1 || triggerFired[10]==1)'
+#monojet
+met           = 'met>200'        
+leadingjetpT  = 'jet1Pt>100.'
+leadingjeteta = 'abs(jet1Eta)<2.5'
+jetcleaning   = 'jet1isMonoJetIdNew==1'
+deltaPhi      = 'abs(minJetMetDPhi_withendcap) > 0.5'
+inversemonov  = '(fatjet1Pt<250. || fatjet1tau21 > 0.6 || fatjet1PrunedM < 65 || met < 250. || fatjet1PrunedM>105)'
+jetoutofaccp  = 'leadingJet_outaccp==0'
 
-monoJet     = 'jet1Pt > 100 && jet1isMonoJetIdNew == 1 && abs(jet1Eta) < 2.4'
-monoVSimple = 'fatjet1Pt > 250 && fatjet1tau21 < 0.6 && met > 250 && ' + monoJet
-monoVNoMass = monoVSimple + ' && jet1isMonoJetIdNew == 1' # && abs(fatjet1Eta) < 2.4
-monoV       = monoVNoMass + ' && fatjet1PrunedM < 105 && fatjet1PrunedM > 62'
-#monoVeto    = monoV
-monoVeto    = 'fatjet1Pt > 250 && fatjet1PrunedM > 62 && met > 250 && fatjet1tau21 < 0.6 && abs(fatjet1Eta) < 2.4 && fatjet1PrunedM < 105'
+monojet = str(balance+'&&'+met+'&&'+leadingjetpT+'&&'+leadingjeteta+'&&'+jetcleaning+'&&'+deltaPhi+'&&'+metfilter+'&&'+jetoutofaccp)
 
-topSimple = 'n_tightlep == 1 && n_looselep == 1 && trueMet > 30 && n_bjetsMedium != 0'
-#topregion = topSimple + ' && n_bjetsLoose > 1 && fatjet1DRLooseB > 1.2 && fatjet1Pt > 250 && fatjet1Eta < 2.4 && fatjet1MonojetId == 1'
-topregion = topSimple + ' && n_bjetsLoose > 1 && fatjet1overlapB < 1 && fatjet1Pt > 250 && fatjet1Eta < 2.4 && fatjet1MonojetId == 1'
-toprecoil = topSimple + ' && n_bjetsLoose > 1 '
+############
 
-Zee_noBVeto = str(zeeAll + ' && ' + 
-          metCut + ' && ' + 
-          photonVeto + ' && ' + 
-          diLepton + ' && ' + 
-          ETrigger + ' && ' + 
-          'lep1PdgId*lep2PdgId == -121')
+#monoV
+metv              = 'met>250'        
+leadingfatjetpT   = 'fatjet1Pt>250.'
+leadingfatjeteta  = 'abs(fatjet1Eta)<2.4'
+jetsubstructure   = 'fatjet1tau21 < 0.6 '
+prunedmass        = 'fatjet1PrunedM > 65 && fatjet1PrunedM < 105'
+        
+monov    = str(balance+'&&'+metv+'&&'+leadingfatjetpT+'&&'+leadingfatjeteta+'&&'+jetsubstructure+'&&'+prunedmass+'&&'+deltaPhi+'&&'+jetcleaning+'&&'+metfilter+'&&'+jetoutofaccp)
+monoveto = str(metv+'&&'+leadingfatjetpT+'&&'+leadingfatjeteta+'&&'+jetsubstructure+'&&'+prunedmass)
 
-Zmm_noBVeto = str(allCut + ' && ' + 
-          metCut + ' && ' + 
-          photonVeto + ' && ' + 
-          diLepton + ' && ' + 
-          'lep1PdgId*lep2PdgId == -169')
+############
+#vbf
+vbfjetpT   = 'jot1Pt>100. && jot2Pt > 40. && abs(jot1Eta)<4.7 && abs(jot2Eta)<4.7'
+vbfjeteta  = 'jot1Eta*jot2Eta < 0'
+detajj     = 'abs(jjDEta) > 3.0'
 
-Wen_noBVeto = str(allCut + ' && ' + 
-          metCut + ' && ' + 
-          photonVeto + ' && ' + 
-          singleLepton + ' && ' + 
-          'lep1Pt > 40 && ' +
-          ETrigger + ' && ' +
-          'abs(lep1PdgId) == 11 && trueMet > 50')
+vbf = str(balance+'&&'+met+'&&'+vbfjetpT+'&&'+vbfjeteta+'&&'+detajj+'&&'+deltaPhi+'&&'+metfilter+'&&'+jetoutofaccp)
 
-Wmn_noBVeto = str(allCut + ' && ' + 
-          metCut + ' && ' + 
-          photonVeto + ' && ' + 
-          singleLepton + ' && ' + 
-          'abs(lep1PdgId) == 13')
+############
+tauveto    = 'n_tau==0'
+btagveto   = 'n_bjetsMedium==0'
+leptonveto = 'n_looselep==0'
+phoveto    = 'n_loosepho==0'
 
-gjet_noBVeto = str(allCut + ' && ' + 
-           metCut + ' && ' + 
-           leptonVeto + ' && ' + 
-           GTrigger + ' && ' + 
-           singlePhoton)
 
-signal_noBVeto = str(allCut + ' && ' + 
-             metCut + ' && ' + 
-             leptonVeto + ' && ' + 
-             photonVeto)
+#** Control Regions
+leadinglepID = 'n_tightlep > 0'
+Zmm_r   = '((n_looselep == 2 && abs(dilep_m - 91) < 30 && (lep1PdgId*lep2PdgId == -169)))'
+Zee_r   = '((n_looselep == 2 && abs(dilep_m - 91) < 30 && (lep1PdgId*lep2PdgId == -121)))'
+Wmn_r   = '((n_looselep == 1 && abs(lep1PdgId)==13 && mt<160))'
+Wen_r   = '((n_looselep == 1 && abs(lep1PdgId)==11 && trueMet>50. && mt<160))'
+gjets_r = '((photonPt > 175 && abs(photonEta) < 1.4442 && n_mediumpho == 1 && n_loosepho == 1))'
 
-signal = signal_noBVeto + ' && ' + bVeto
-Zmm = Zmm_noBVeto + ' && ' + bVeto
-Zee = Zee_noBVeto + ' && ' + bVeto
-Wmn = Wmn_noBVeto + ' && ' + bVeto
-Wen = Wen_noBVeto + ' && ' + bVeto
-gjet = gjet_noBVeto + ' && ' + bVeto
+Zee  = str(Zee_r         + ' && ' + 
+           phoveto       + ' && ' + 
+           tauveto       + ' && ' + 
+           btagveto      + ' && ' + 
+           leadinglepID   
+           )
 
-Zll = '((' + Zee + ') || (' + Zmm + '))'
-Wln = '((' + Wen + ') || (' + Wmn + '))'
+Zmm  = str(Zmm_r         + ' && ' + 
+           phoveto       + ' && ' + 
+           tauveto       + ' && ' + 
+           btagveto      + ' && ' + 
+           leadinglepID  
+           )
 
-top = str(allCut + ' && ' +
-          photonVeto + ' && ' +
-          metCut + ' && ' +
-          topregion)
+Wen  = str(Wen_r         + ' && ' + 
+           phoveto       + ' && ' + 
+           tauveto       + ' && ' + 
+           btagveto      + ' && ' + 
+           leadinglepID  
+           )
+
+Wmn  = str(Wmn_r         + ' && ' + 
+           phoveto       + ' && ' + 
+           tauveto       + ' && ' + 
+           btagveto      + ' && ' + 
+           leadinglepID  
+           )
+
+gjet = str(gjets_r       + ' && ' + 
+           leptonveto    + ' && ' + 
+           tauveto       + ' && ' + 
+           btagveto      
+           )
+
+signal = str(phoveto       + ' && ' + 
+             tauveto       + ' && ' + 
+             btagveto      + ' && ' + 
+             leptonveto   
+             )
+
 
 categoryCuts = {
-    'monoJet_inc' : monoJet,
-    'monoV' : monoV,
-    'monoJet' : monoJet + ' && !(' + monoVeto + ')',
+    'monoJet_inc' : monojet,
+    'monoV' : monov,
+    'vbf'   : vbf,
+    'monoJet' : monojet + ' && !(' + monoveto + ')',
     }
 
 regionCuts = {
-    'signal_noBVeto' : signal_noBVeto,
-    'Zmm_noBVeto' : Zmm_noBVeto,
-    'Zee_noBVeto' : Zee_noBVeto,
-    'Wmn_noBVeto' : Wmn_noBVeto,
-    'Wen_noBVeto' : Wen_noBVeto,
-    'gjets_noBVeto' : gjet_noBVeto,
     'signal' : signal,
-    'Zmm' : Zmm,
-    'Zee' : Zee,
-    'Wmn' : Wmn,
-    'Wen' : Wen,
-    'gjets' : gjet,
-    'Zll' : Zll,
-    'Wln' : Wln,
-    'tt'  : top
+    'Zmm'    : Zmm,
+    'Zee'    : Zee,
+    'Wmn'    : Wmn,
+    'Wen'    : Wen,
+    'gjets'  : gjet
     }
 
-#defaultMCWeight = 'mcFactors * postfit'
-defaultMCWeight = 'mcFactors'
+defaultMCWeight = 'mcWeight'
 
-additionKeys = ['signal','Zmm','Wmn','tt']
+#first one is the cut, second one is the SF
+
+#additionKeys = ['default']
+additionKeys = []
+#additionKeys = ['signal','Zmm','Wmn','Zee','Wen','gjets']
 additions    = { # key : [Data,MC]
-    'signal' :  [METTrigger,'METTrigger'],
-    'Zmm' :     [METTrigger,'METTrigger'],
-    'Wmn' :     [METTrigger,'METTrigger'],
-    'tt'  :     [METTrigger,'METTrigger'],
-    'default' : ['1',defaultMCWeight]
+    #'signal' :  [metfilter_real,defaultMCWeight],
+    #'Zmm' :     [metfilter_real,defaultMCWeight],
+    #'Wmn' :     [metfilter_real,defaultMCWeight],
+    #'Zee' :     [metfilter_real,defaultMCWeight],
+    #'Wen' :     [metfilter_real,defaultMCWeight],
+    #'gjets':    [metfilter_real,defaultMCWeight]
+    #'default' : [metfilter_real,defaultMCWeight]
+    'default' : ['',defaultMCWeight]
     }
 
 def cut(category, region):
+    print category, region, '((' + categoryCuts[category] + ') && (' + regionCuts[region] + '))'
     return '((' + categoryCuts[category] + ') && (' + regionCuts[region] + '))'
 
 def dataMCCuts(region, isData):

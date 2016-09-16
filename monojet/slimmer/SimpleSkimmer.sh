@@ -10,7 +10,14 @@ then
     rm $CrombieSkimDir/*/*.root 2> /dev/null
 fi
 
-CrombieFlatSkimmer  --cut 'met > 200' --tree 'events' --copy 'htotal' --run 'runNum' --lumi 'lumiNum' --freq 1000000 --numproc $CrombieNLocalProcs --indir $CrombieFullDir --outdir $CrombieSkimDir --json $CrombieGoodRuns --filters 'files/badResolutionTrack_Jan13.txt' 'files/csc2015_Dec01.txt' 'files/ecalscn1043093_Dec01.txt' 'files/MET_hbheiso.txt' 'files/MET_hbher2l.txt' 'files/muonBadTrack_Jan13.txt'
+CrombieFlatSkimmer  --cut 'met > 200' --tree 'events' --copy 'htotal' --run 'runNum' --lumi 'lumiNum' --freq 1000000 --numproc $CrombieNLocalProcs --indir $CrombieFullDir --outdir $CrombieSkimDir --json $CrombieGoodRuns 
+
+if [ ! -d $CrombieSkimDir/Purity ]
+then
+    mkdir $CrombieSkimDir/Purity
+fi
 
 ./applyCorrections.py $CrombieSkimDir
-./applyTriggers.py $CrombieSkimDir
+
+#cp $CrombieSkimDir/monojet_GJets* $CrombieSkimDir/Purity/.
+#./applyPurity.py $CrombieSkimDir/Purity

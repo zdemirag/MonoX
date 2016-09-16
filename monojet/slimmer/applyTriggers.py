@@ -12,6 +12,7 @@ def addCorr(name,expr,cut,fileName,histName):
 ##
 
 addCorr('METTrigger','met','1','files/triggerEffs.root','MET_trigger')
+addCorr('EleTrigger',['abs(lep1Eta)','lep1Pt'],'lep1IsTight && lep1Pt > 0 && abs(lep1PdgId) == 11','files/eleTrig.root','hEffEtaPt')
 
 for fileName in os.listdir(directory):
     if not '.root' in fileName:

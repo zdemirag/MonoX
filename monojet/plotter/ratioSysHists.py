@@ -9,7 +9,7 @@ import math, os
 
 plotter.SetCanvasSize(600,700)
 
-directory = '/afs/cern.ch/work/d/dabercro/public/Winter15/SkimOut_160212/'
+directory = '/afs/cern.ch/work/z/zdemirag/public/ichep/setup80x/Skim_v3/'
 
 uncFile_ewk = TFile('/afs/cern.ch/user/z/zdemirag/public/forDan/atoz_ewkunc.root')
 uncFile     = TFile('/afs/cern.ch/user/z/zdemirag/public/forDan/atoz_unc.root')
@@ -23,9 +23,9 @@ uncertainties = [
 
 outDir = '~/www/plots/' + os.environ['CROMBIEDATE'] + '/'
 
-gammaMCFile = TFile(directory + 'merged/monojet_GJets.root')
+gammaMCFile = TFile(directory + 'monojet_GJets.root')
 print gammaMCFile.GetName()
-zeeMCFile   = TFile(directory + 'merged/monojet_DY.root')
+zeeMCFile   = TFile(directory + 'monojet_DY.root')
 print zeeMCFile.GetName()
 dataFile    = TFile(directory + 'monojet_Data.root')
 print dataFile.GetName()
