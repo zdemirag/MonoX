@@ -25,20 +25,22 @@ def build_selection(selection,bin0):
         #'monoveto'       :['!(fatjet1Pt>250. && fatjet1tau21 < 0.6 && fatjet1PrunedM > 65 && met > 250. && fatjet1PrunedM < 105 && abs(fatjet1Eta)<2.4)',selections],
         
         #monoV
-        'leading jet pT'   :['fatjet1Pt>250.',selections],
-        'jet cleaning'     :['jet1isMonoJetIdNew==1',selections],      
-        'leading jet eta'  :['abs(fatjet1Eta)<2.4',selections],                                                      
-        'jet substrcuture' :['fatjet1tau21 < 0.6 ',selections], 
-        'mass'             :['fatjet1PrunedM > 65 && fatjet1PrunedM < 105',selections],
-        'deltaPhi'         :['abs(minJetMetDPhi_withendcap) > 0.5',['signal','Zmm','Wmn','gjets','Wen','Zee']],
-        'jetoutaccp'       :['leadingJet_outaccp==0',selections],
+        #'leading jet pT'   :['fatjet1Pt>250.',selections],
+        #'jet cleaning'     :['jet1isMonoJetIdNew==1',selections],      
+        #'leading jet eta'  :['abs(fatjet1Eta)<2.4',selections],                                                      
+        #'jet substrcuture' :['fatjet1tau21 < 0.6 ',selections], 
+        #'mass'             :['fatjet1PrunedM > 65 && fatjet1PrunedM < 105',selections],
+        #'deltaPhi'         :['abs(minJetMetDPhi_withendcap) > 0.5',['signal','Zmm','Wmn','gjets','Wen','Zee']],
+        #'jetoutaccp'       :['leadingJet_outaccp==0',selections],
         
         #vbf
-        #'deltaPhi'       :['abs(minJetMetDPhi_withendcap) > 0.5',['signal','Zmm','Wmn','gjets','Wen']],
-        #'jet pT'         :['jot1Pt>100. && jot2Pt > 40. && abs(jot1Eta)<4.7 && abs(jot2Eta)<4.7',selections],
-        #'jetoutaccp'     :['leadingJet_outaccp==1',selections],
-        #'jet eta'        :['jot1Eta*jot2Eta < 0',selections],
-        #'detajj'         :['abs(jjDEta) > 3.0',selections],
+        'deltaPhi'       :['abs(minJetMetDPhi_withendcap) > 0.5',selections],
+        'noisecleaning'  :['metfilter==1 && filterbadChCandidate==1 && filterbadPFMuon==1',selections],
+        'jet pT'         :['jot1Pt>100. && jot2Pt > 40. && abs(jot1Eta)<4.7 && abs(jot2Eta)<4.7',selections],
+        'jet cleaning'   :['jet1isMonoJetIdNew==1',selections],      
+        'jetoutaccp'     :['leadingJet_outaccp==0',selections],
+        'jet eta'        :['jot1Eta*jot2Eta < 0',selections],
+        'detajj'         :['abs(jjDEta) > 3.0',selections],
 
         ####
         #'mjj'        :['mjj>500.',selections],

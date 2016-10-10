@@ -7,11 +7,12 @@ from LoadData import *
 #from LoadElectron import *
 #from LoadGJets import *
 
-#channel_list  = ['signal','Wmn','Zmm']
+#channel_list  = ['signal']
+channel_list  = ['signal','Wmn','Zmm']
 #channel_list  = ['Wmn','Zmm']
 #channel_list  = ['Wen','Zee']
 #channel_list  = ['gjets']
-channel_list  = ['signal']
+#channel_list  = ['signal']
 #channel_list  = ['Zmm']
 
 #lumi = 881.
@@ -24,7 +25,7 @@ lumi = 12900.
 lumi_str = 12.9
 
 blind = False
-vbf = False
+vbf = True
 vtag = False
 shapelimits = False
 
@@ -51,7 +52,7 @@ print "Starting Plotting Be Patient!"
 
 def plot_stack(channel, name,var, bin, low, high, ylabel, xlabel, setLog = False):
 
-    folder = '/afs/cern.ch/user/z/zdemirag/www/Monojet/ichep_80x/topupv6_updated/'
+    folder = '/afs/cern.ch/user/z/zdemirag/www/Monojet/ichep_80x/topupv6_updated_test/'
     if not os.path.exists(folder):
         os.mkdir(folder)
 
@@ -307,13 +308,13 @@ def plot_stack(channel, name,var, bin, low, high, ylabel, xlabel, setLog = False
     Variables['data'].Draw("Esame")  
     Variables['signal_vbf'].SetLineWidth(2)
     #Variables['signal_ggf'].SetLineWidth(2)
-    Variables['signal_vbf'].SetLineColor(2)
+    Variables['signal_vbf'].SetLineColor(1)
     #Variables['signal_ggf'].SetLineColor(4)
-    #Variables['signal_vbf'].Draw("samehist")
+    Variables['signal_vbf'].Draw("samehist")
     #Variables['signal_ggf'].Draw("samehist")
 
 
-    #legend . AddEntry(Variables['signal_vbf'],physics_processes['signal_vbf']['label'] , "l")
+    legend . AddEntry(Variables['signal_vbf'],physics_processes['signal_vbf']['label'] , "l")
     #legend . AddEntry(Variables['signal_ggf'],physics_processes['signal_ggf']['label'] , "l")
 
 
@@ -321,7 +322,7 @@ def plot_stack(channel, name,var, bin, low, high, ylabel, xlabel, setLog = False
     legend.SetFillColor(0);
     legend.SetLineColor(0);
 
-    #legend.Draw("same")
+    legend.Draw("same")
     plot_cms(True,lumi_str,c4)
 
 
@@ -433,6 +434,7 @@ arguments['deltaPhi'] = ['minJetMetDPhi_clean','minJetMetDPhi_clean',30,0,3.0,'E
 arguments['deltaPhi_endcap'] = ['minJetMetDPhi_withendcap','abs(minJetMetDPhi_withendcap)',30,0,3.0,'Events','min deltaPhi(jet,met)',False]
 arguments['dPhi_j1j2'] = ['dPhi_j1j2','dPhi_j1j2',30,0,3.0,'Events','deltaPhi(j,j)',False]
 arguments['dPhi_j1met'] = ['deltaPhi_jet1met','TMath::Abs(deltaPhi(jot1Phi,metPhi))',30,0,3.0,'Events','deltaPhi(j1,met)',False]
+arguments['dPhi_jo1jo2'] = ['deltaPhi_jet1jet2','TMath::Abs(deltaPhi(jot1Phi,jot2Phi))',30,0,3.0,'Events','deltaPhi(j1,j2)',False]
 arguments['mass'] = ['mass','vectormass(photonPt,photonPhi,photonEta,fatjet1Pt,fatjet1Phi,fatjet1Phi)',100,400,2400,'Events','M_{j#gamma} [GeV]',True]
 
 arguments['jot1Pt']  = ['jot1Pt','jot1Pt',20,100,1000,'Events/GeV','Leading Jet P_{T} [GeV]',True]
@@ -472,7 +474,8 @@ processes     = []
 #variable_list = ['met','npv','jetpt', 'fatjet1tau21','fatjet1Pt','fatjet1PrunedM']
 
 if vbf:
-    variable_list = ['met','jot1Pt','jot1Eta','jot2Pt','jot1Phi','jot2Phi','jot2Eta','mjj','jjDEta','deltaPhi_endcap','njetsclean','dPhi_j1met']
+    variable_list = ['met','dPhi_jo1jo2']
+    #variable_list = ['met','jot1Pt','jot1Eta','jot2Pt','jot1Phi','jot2Phi','jot2Eta','mjj','jjDEta','deltaPhi_endcap','njetsclean','dPhi_j1met']
 elif vtag:
     variable_list = ['met','npv']
     #variable_list = ['met', 'fatjet1tau21','fatjet1Pt','fatjet1PrunedM','trueMet','photonPt']
