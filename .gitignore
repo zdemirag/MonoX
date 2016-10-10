@@ -41,4 +41,6 @@ datacard*.txt
 ._*
 *.txt.*
 
+*.root*
+
 TerminalList_*
