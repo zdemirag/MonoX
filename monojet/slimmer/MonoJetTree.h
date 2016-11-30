@@ -28,6 +28,7 @@ class MonoJetTree
   float mcWeight;
   float trueMet;
   float trueMetPhi;
+  int   genlep_pdgid;
   std::vector<int>*   triggerFired;
   float eleSmearedPt;
   float lep1Pt;
@@ -104,6 +105,7 @@ class MonoJetTree
   float jet2DPhiTrueMet;
   float jet2QGL;
   int   n_cleanedjets;
+  int   n_cleanedjets_vbf;
   float ht_cleanedjets;
   float dPhi_j1j2;
   float minJetMetDPhi;

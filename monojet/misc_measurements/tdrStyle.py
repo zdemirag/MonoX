@@ -104,7 +104,7 @@ def setTDRStyle():
     ROOT . gStyle . SetTitleSize(0.05, "XYZ");
     # ROOT . gStyle . SetTitleXSize(Float_t size = 0.02); # Another way to set the size?
     # ROOT . gStyle . SetTitleYSize(Float_t size = 0.02);
-    ROOT . gStyle . SetTitleXOffset(0.9);
+    ROOT . gStyle . SetTitleXOffset(1.0);
     ROOT . gStyle . SetTitleYOffset(1.05);
     # ROOT . gStyle . SetTitleOffset(1.1, "Y"); # Another way to set the Offset
 

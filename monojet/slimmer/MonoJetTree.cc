@@ -57,6 +57,7 @@ MonoJetTree::Reset()
   mcWeight = 0;
   trueMet = -5;
   trueMetPhi = -5;
+  genlep_pdgid = 0;
   triggerFired = 0;
   eleSmearedPt = -5;
   lep1Pt = -5;
@@ -133,6 +134,7 @@ MonoJetTree::Reset()
   jet2DPhiTrueMet = -1;
   jet2QGL = -2;
   n_cleanedjets = 0;
+  n_cleanedjets_vbf = 0;
   ht_cleanedjets = 0;
   dPhi_j1j2 = -1;
   minJetMetDPhi = 5;
@@ -230,6 +232,7 @@ MonoJetTree::SetupTree()
   t->Branch("mcWeight",&mcWeight,"mcWeight/F");
   t->Branch("trueMet",&trueMet,"trueMet/F");
   t->Branch("trueMetPhi",&trueMetPhi,"trueMetPhi/F");
+  t->Branch("genlep_pdgid",&genlep_pdgid,"genlep_pdgid/I");
   t->Branch("triggerFired",&triggerFired);
   t->Branch("eleSmearedPt",&eleSmearedPt,"eleSmearedPt/F");
   t->Branch("lep1Pt",&lep1Pt,"lep1Pt/F");
@@ -298,6 +301,7 @@ MonoJetTree::SetupTree()
   t->Branch("jet2DPhiTrueMet",&jet2DPhiTrueMet,"jet2DPhiTrueMet/F");
   t->Branch("jet2QGL",&jet2QGL,"jet2QGL/F");
   t->Branch("n_cleanedjets",&n_cleanedjets,"n_cleanedjets/I");
+  t->Branch("n_cleanedjets_vbf",&n_cleanedjets_vbf,"n_cleanedjets_vbf/I");
   t->Branch("ht_cleanedjets",&ht_cleanedjets,"ht_cleanedjets/F");
   t->Branch("dPhi_j1j2",&dPhi_j1j2,"dPhi_j1j2/F");
   t->Branch("minJetMetDPhi",&minJetMetDPhi,"minJetMetDPhi/F");

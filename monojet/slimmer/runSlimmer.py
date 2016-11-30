@@ -16,12 +16,15 @@ ROOT.gROOT.LoadMacro('NeroSlimmer.cc+')
 
 if sys.argv[1] == "test":
     ROOT.NeroSlimmer(
-        "eos/cms/store/group/phys_exotica/monojet/zdemirag/setup80x/Nero/zey_base/SingleElectron/SingleElectron-Run2016B-v2_Missing/160713_150938/0000/NeroNtuples_19.root",
+        #"eos/cms/store/group/phys_exotica/monojet/zdemirag/setup80x/Nero/zey_base/SingleElectron/SingleElectron-Run2016B-v2_Missing/160713_150938/0000/NeroNtuples_19.root",
         #"eos/cms/store/group/phys_exotica/monojet/zdemirag/setup80x/Nero/zey_base/DMV_NNPDF30_Axial_Mphi-1500_Mchi-10_gSM-0p25_gDM-1p0_v2_13TeV-powheg/DMV_NNPDF30_Axial_Mphi-1500_Mchi-10_gSM-0p25_gDM-1p0/160710_100053/0000/NeroNtuples_1.root",
         #"eos/cms/store/group/phys_exotica/monojet/zdemirag/setup80x/Nero/zey_base/MET/MET-Run2016B-v2/160709_170419/0000/NeroNtuples_1.root",
-        "new_test.root"
-        #"eos/cms/store/user/zdemirag/setup80x/Nero/zey_base/DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/DYJetsToLL_M-50_HT-600toInf/160606_230225/0000/NeroNtuples_7.root",
-        #"dy_test.root"
+        #"eos/cms/store/group/phys_exotica/monojet/zdemirag/setup80x/Nero/zey_base/DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/DYJetsToLL_M-50_HT-600toInf/160709_171123/0000/NeroNtuples_1.root",
+        #"/afs/cern.ch/work/z/zdemirag/work/ichep/Jul9_Additions/CMSSW_8_0_10/src/NeroProducer/Nero/test/NeroNtuples_HVBF_125.root",
+        #"new_hvbf125.root"
+        #"eos/cms/store/group/phys_exotica/monojet/zdemirag/setup80x/Nero/zey_base/WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/WJetsToLNu_HT-200To400/160709_172016/0000/NeroNtuples_1.root",
+        "/afs/cern.ch/work/z/zdemirag/work/ichep/Jul9_Additions/CMSSW_8_0_10/src/NeroProducer/Nero/test/NeroNtuples_HVBF_125.root",
+        "monojet_HVBF_125.root"
         #"eos/cms/store/user/zdemirag/setup80x/Nero/Data/zey_base/SingleElectron/SingleElectron-Run2016B-v2/160620_201710/0000/NeroNtuples_Photon_278.root",
         #"missing_ele_6.root"
         )

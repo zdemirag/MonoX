@@ -39,6 +39,7 @@ else:
 
 #initialize 
 n_njet=0; n_nmet=0; n_njetid=0; n_nlep=0; n_ntau=0; n_npho=0; n_dphi=0; n_nbjet=0; n_nmindphi=0;
+
 n_nvbfjet=0; n_n12=0; n_deltan=0; n_mjj=0;
 
 # Check the number of entries in the tree
@@ -58,9 +59,40 @@ for ientry in range(0,n_entries):
 
   #print 'INFO ------------------------ Event '+str(ientry)+' ------------------------ '
 
+  if not (input_tree.trueMet > 200):
+    continue
+  n_nmet += 1
+
   if not (input_tree.n_looselep == 0):
     continue
   n_nlep += 1
+
+  #if not (input_tree.jet1Pt > 100 and input_tree.jet1isMonoJetIdNew == 1):
+  if not (input_tree.jot1Pt > 80):
+    continue
+  n_njet += 1
+
+  if not (input_tree.jot2Pt > 40 ):
+    continue
+  n_nvbfjet += 1
+
+
+  if not (input_tree.minJetMetDPhi_withendcap > 0.5):
+  #if not (input_tree.minJetMetDPhi > 0.5):
+    continue
+  n_nmindphi += 1
+
+  if not ((input_tree.jot1Eta * input_tree.jot2Eta) < 0):
+    continue
+  n_n12 += 1
+
+  if not (abs(input_tree.jjDEta) > 2.5 ):
+    continue
+  n_deltan += 1
+
+  if not (input_tree.mjj > 500.):
+    continue
+  n_mjj += 1
 
   if not (input_tree.n_loosepho == 0):
     continue
@@ -72,54 +104,26 @@ for ientry in range(0,n_entries):
 
   #print input_tree.runNum,input_tree.lumiNum,input_tree.eventNum
 
-  if not (input_tree.n_bjetsMedium == 0):
+  #if not (input_tree.n_bjetsMedium == 0):
+  if not (input_tree.n_bjetsTight == 0):
     continue
   n_nbjet += 1
-  
-  #if not (input_tree.jet1Pt > 100):
-  if not (input_tree.jet1Pt > 100 and input_tree.jet1isMonoJetIdNew == 1):
-    continue
-  n_njet += 1
 
-  if not (input_tree.minJetMetDPhi_withendcap > 0.5):
-  #if not (input_tree.minJetMetDPhi > 0.5):
-    continue
-  n_nmindphi += 1
 
-  if not (input_tree.trueMet > 200):
-    continue
-  n_nmet += 1
-
-  if not (input_tree.jot2Pt > 40 ):
-    continue
-  n_nvbfjet += 1
-
-  if not ((input_tree.jot1Eta * input_tree.jot2Eta) < 0):
-    continue
-  n_n12 += 1
-
-  if not (abs(input_tree.jjDEta) > 3.5 ):
-    continue
-  n_deltan += 1
-
-  if not (input_tree.mjj > 500.):
-    continue
-  n_mjj += 1
-
-  print input_tree.runNum,input_tree.lumiNum,input_tree.eventNum,input_tree.jot1Pt,input_tree.jot1Eta,input_tree.jot2Pt,input_tree.jot2Eta,input_tree.mjj
+  #print input_tree.runNum,input_tree.lumiNum,input_tree.eventNum,input_tree.jot1Pt,input_tree.jot1Eta,input_tree.jot2Pt,input_tree.jot2Eta,input_tree.mjj
 
   
 print 'INFO - Signal Cut Flow Chart: '
 print 'INFO - Full     '+ str(n_entries)
+print 'INFO - Met Cut  '+ str(n_nmet)
 print 'INFO - NLep Cut '+ str(n_nlep)
-print 'INFO - NPho Cut '+ str(n_npho)
-print 'INFO - NTau Cut '+ str(n_ntau)
-print 'INFO - Nbjet    '+ str(n_nbjet)
 print 'INFO - Jet Cut  '+ str(n_njet)
 print 'INFO - Jet Id Cut  '+ str(n_njetid)
-print 'INFO - DPhi Cut '+ str(n_nmindphi)
-print 'INFO - Met Cut  '+ str(n_nmet)
 print 'INFO - VBF Jet Pt Cut '+ str(n_nvbfjet)
+print 'INFO - DPhi Cut '+ str(n_nmindphi)
 print 'INFO - Eta1Eta2 Cut   '+ str(n_n12)
 print 'INFO - DeltaEta Cut   '+ str(n_deltan)
 print 'INFO - Mjj Cut        '+ str(n_mjj)
+print 'INFO - NPho Cut '+ str(n_npho)
+print 'INFO - NTau Cut '+ str(n_ntau)
+print 'INFO - Nbjet    '+ str(n_nbjet)

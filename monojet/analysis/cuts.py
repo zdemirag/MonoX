@@ -32,11 +32,12 @@ monoveto = str(metv+'&&'+leadingfatjetpT+'&&'+leadingfatjeteta+'&&'+jetsubstruct
 
 ############
 #vbf
-vbfjetpT   = 'jot1Pt>100. && jot2Pt > 40. && abs(jot1Eta)<4.7 && abs(jot2Eta)<4.7'
+vbfjetpT   = 'jot1Pt>80. && jot2Pt > 40. && abs(jot1Eta)<4.7 && abs(jot2Eta)<4.7'
 vbfjeteta  = 'jot1Eta*jot2Eta < 0'
-detajj     = 'abs(jjDEta) > 3.0'
+detajj     = 'abs(jjDEta) > 4.5'
+horns      = '(abs(jot1Eta)<3.1 ||  abs(jot1Eta)>3.3)'
 
-vbf = str(balance+'&&'+met+'&&'+vbfjetpT+'&&'+vbfjeteta+'&&'+detajj+'&&'+deltaPhi+'&&'+metfilter+'&&'+jetoutofaccp)
+vbf = str(balance+'&&'+met+'&&'+vbfjetpT+'&&'+vbfjeteta+'&&'+detajj+'&&'+deltaPhi+'&&'+metfilter+'&&'+horns)
 
 ############
 tauveto    = 'n_tau==0'

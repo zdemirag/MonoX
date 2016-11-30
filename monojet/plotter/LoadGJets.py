@@ -10,7 +10,8 @@ lumi = 1.0
 
 #dataDir = "eos/cms/store/user/zdemirag/setup80x/Skim_v9/monojet_"
 #dataDir = "/afs/cern.ch/work/z/zdemirag/public/ichep/setup80x/Skim_v2/monojet_"
-dataDir = "/afs/cern.ch/work/z/zdemirag/public/ichep/setup80x/Skim_v3/monojet_"
+#dataDir = "/afs/cern.ch/work/z/zdemirag/public/ichep/setup80x/Skim_v3/monojet_"
+dataDir = "/afs/cern.ch/work/z/zdemirag/public/ichep/setup80x/Skim_v12/monojet_"
 
 physics_processes = {
         #'QCD': { 'label':'QCD',
@@ -116,7 +117,8 @@ physics_processes = {
                   'ordering': 6,    
                   'xsec' : 1.0,
                   #'files':[dataDir+'SinglePhoton_JetHT.root',],
-                  'files':[dataDir+'SinglePhoton.root',],
+                  #'files':[dataDir+'SinglePhoton.root',],
+                  'files':['/afs/cern.ch/work/z/zdemirag/public/ichep/setup80x/Skim_v15/monojet_SinglePhoton.root',],
                   }
         }
 

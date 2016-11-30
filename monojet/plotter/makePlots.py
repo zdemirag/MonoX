@@ -7,8 +7,8 @@ from LoadData import *
 #from LoadElectron import *
 #from LoadGJets import *
 
-#channel_list  = ['signal']
-channel_list  = ['signal','Wmn','Zmm']
+channel_list  = ['signal']
+#channel_list  = ['signal','Wmn','Zmm']
 #channel_list  = ['Wmn','Zmm']
 #channel_list  = ['Wen','Zee']
 #channel_list  = ['gjets']
@@ -21,11 +21,20 @@ channel_list  = ['signal','Wmn','Zmm']
 #lumi = 7630.
 #lumi_str = 7.63
 
-lumi = 12900.
-lumi_str = 12.9
+#lumi=27600.
+#lumi_str = 27.6
 
-blind = False
-vbf = True
+lumi=21700.
+lumi_str = 21.7
+
+#lumi = 12900.
+#lumi_str = 12.9
+
+#lumi = 2300.
+#lumi_str = 2.3
+
+blind = True
+vbf = False
 vtag = False
 shapelimits = False
 
@@ -52,7 +61,11 @@ print "Starting Plotting Be Patient!"
 
 def plot_stack(channel, name,var, bin, low, high, ylabel, xlabel, setLog = False):
 
-    folder = '/afs/cern.ch/user/z/zdemirag/www/Monojet/ichep_80x/topupv6_updated_test/'
+    #folder = '/afs/cern.ch/user/z/zdemirag/www/Monojet/ichep_80x/topupv6_updated_test4/'
+    #folder = '/afs/cern.ch/user/z/zdemirag/www/Monojet/moriond_80x/v2rereco/nminusone/'
+    folder = '/afs/cern.ch/user/z/zdemirag/www/Monojet/moriond_80x/v2rereco/'
+    #folder = '/afs/cern.ch/user/z/zdemirag/www/VBF/moriond_80x/'
+
     if not os.path.exists(folder):
         os.mkdir(folder)
 
@@ -61,7 +74,7 @@ def plot_stack(channel, name,var, bin, low, high, ylabel, xlabel, setLog = False
     stack = THStack('a', 'a')
     if var.startswith('met'):
         if vtag or vbf:
-            binLowE = [250,300,350,400,500,600,750,1000]
+            binLowE = [200,250,300,350,400,500,600,750,1000]
         else:
             binLowE = [200., 230., 260.0, 290.0, 320.0, 350.0, 390.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0]
 
@@ -104,7 +117,7 @@ def plot_stack(channel, name,var, bin, low, high, ylabel, xlabel, setLog = False
 
         if var.startswith('met'):
             if vtag or vbf :
-                binLowE = [250,300,350,400,500,600,750,1000]
+                binLowE = [200,250,300,350,400,500,600,750,1000]
             else:
                 binLowE = [200., 230., 260.0, 290.0, 320.0, 350.0, 390.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0]            
 
@@ -133,10 +146,13 @@ def plot_stack(channel, name,var, bin, low, high, ylabel, xlabel, setLog = False
         scale = 1.0;
         scale = float(lumi)*physics_processes[Type]['xsec']/total
 
-        #print Type, scale, total
+        print Type, scale, total, physics_processes[Type]['xsec']/total, "equiv lumi", 1./(physics_processes[Type]['xsec']/total)
 
         ##Common weights used for the analysis        
         triggercut = "(1.0)"
+
+        pu_new = "(1.0)"
+        #pu_new = "((0.018374690786*(npv>0.0&&npv<=2.0)+0.1480526611209*(npv>2.0&&npv<=4.0)+0.263987904787*(npv>4.0&&npv<=6.0)+0.470829492807*(npv>6.0&&npv<=8.0)+0.674840676785*(npv>8.0&&npv<=10.0)+0.888554382324*(npv>10.0&&npv<=12.0)+0.959422707558*(npv>12.0&&npv<=14.0)+1.00461602211*(npv>14.0&&npv<=16.0)+1.03911995888*(npv>16.0&&npv<=18.0)+1.04041302204*(npv>18.0&&npv<=20.0)+1.06928896904*(npv>20.0&&npv<=22.0)+1.06935596466*(npv>22.0&&npv<=24.0)+1.12104594707*(npv>24.0&&npv<=26.0)+1.16304302216*(npv>26.0&&npv<=28.0)+1.41382300854*(npv>28.0&&npv<=30.0)+1.50206696987*(npv>30.0&&npv<=32.0)+1.65214502811*(npv>32.0&&npv<=34.0)+2.56193709373*(npv>34.0&&npv<=36.0)+2.92313694954*(npv>36.0&&npv<=38.0)+5.0195069313*(npv>38.0&&npv<=40.0)+5.658411026*(npv>40.0&&npv<=42.0)+15.9444704056*(npv>42.0&&npv<=44.0)+20.5954399109*(npv>44.0&&npv<=46.0)+75.7518692017*(npv>46.0&&npv<=48.0)+39.4618797302*(npv>48.0&&npv<=50.0)))"
 
         if channel is 'signal':
             if Type is 'data':
@@ -150,36 +166,46 @@ def plot_stack(channel, name,var, bin, low, high, ylabel, xlabel, setLog = False
                 common_weight = "*(1.0)"
                 triggercut = "(triggerFired[10]==1 || triggerFired[11] == 1 || triggerFired[12] || triggerFired[13] == 1)"
             else:
-                common_weight = "*mcWeight*lepton_SF1*lepton_SF2*METTrigger*puWeight*topPtReweighting*tracking_SF1*tracking_SF2"
+                #common_weight = "*mcWeight*lepton_SF1*lepton_SF2*METTrigger*puWeight*topPtReweighting*tracking_SF1*tracking_SF2"
+                common_weight = "*mcWeight*lepton_SF1*lepton_SF2*METTrigger*topPtReweighting*"+pu_new
+                #common_weight = "*mcWeight*lepton_SF1*lepton_SF2*METTrigger*puWeight*topPtReweighting"
 
         elif channel is 'Wmn':
             if Type is 'data':
                 common_weight = "*(1.0)"
                 triggercut = "(triggerFired[10]==1 || triggerFired[11] == 1 || triggerFired[12] || triggerFired[13] == 1)"
             else:
-                common_weight = "*mcWeight*lepton_SF1*lepton_SF2*METTrigger*puWeight*topPtReweighting*tracking_SF1"
+                #common_weight = "*mcWeight*lepton_SF1*lepton_SF2*METTrigger*puWeight*topPtReweighting*tracking_SF1"
+                common_weight = "*mcWeight*lepton_SF1*lepton_SF2*METTrigger*topPtReweighting*"+pu_new
+                #common_weight = "*mcWeight*lepton_SF1*lepton_SF2*METTrigger*puWeight*topPtReweighting"
                 
         elif channel is 'Wen':
             if Type is 'data':
                 common_weight = "*(1.0)"
                 triggercut = "(triggerFired[0] || triggerFired[1] || triggerFired[2] || triggerFired[3] || triggerFired[4] || triggerFired[5] || triggerFired[26])"
             else:
-                common_weight = "*mcWeight*puWeight*EleTrigger_w1*EleTrigger_w2*lepton_SF1*topPtReweighting*gsfTracking_SF1"         
+                #common_weight = "*mcWeight*puWeight*EleTrigger_w1*EleTrigger_w2*lepton_SF1*topPtReweighting*gsfTracking_SF1"         
+                common_weight = "*mcWeight*EleTrigger_w1*EleTrigger_w2*lepton_SF1*topPtReweighting*"+pu_new         
+                #common_weight = "*mcWeight*puWeight*EleTrigger_w1*EleTrigger_w2*lepton_SF1*topPtReweighting"         
 
         elif channel is 'Zee':
             if Type is 'data':
                 common_weight = "*(1.0)"
                 triggercut = "(triggerFired[0] || triggerFired[1] || triggerFired[2] || triggerFired[3] || triggerFired[4] || triggerFired[5] || triggerFired[26])"
             else:
-                common_weight = "*mcWeight*puWeight*lepton_SF1*lepton_SF2*topPtReweighting*gsfTracking_SF1*gsfTracking_SF2" 
+                #common_weight = "*mcWeight*puWeight*lepton_SF1*lepton_SF2*topPtReweighting*gsfTracking_SF1*gsfTracking_SF2" 
+                common_weight = "*mcWeight*lepton_SF1*lepton_SF2*topPtReweighting*"+pu_new 
+                #common_weight = "*mcWeight*puWeight*lepton_SF1*lepton_SF2*topPtReweighting" 
         else:
             if Type is 'data':
                 common_weight = "*(1.0)"
                 triggercut = "(triggerFired[18] || triggerFired[19] || triggerFired[17] || triggerFired[5] || triggerFired[15] || triggerFired[16])"
             else:
-                common_weight = "*mcWeight*PhoTrigger*topPtReweighting*photon_SF*puWeight"
+                common_weight = "*mcWeight*PhoTrigger*topPtReweighting*photon_SF*"+pu_new
                 
         #common_weight = "*mcWeight*lepton_SF1*lepton_SF2*puWeight_true" 
+
+        triggercut = "(1.0)"
 
         if Type is not 'data' and Type is not 'signal_ggf' and Type is not 'signal_vbf':
 
@@ -195,7 +221,7 @@ def plot_stack(channel, name,var, bin, low, high, ylabel, xlabel, setLog = False
                 makeTrees(Type,'events',channel).Draw(var + " >> " + histName,"(" + cut_standard + ")"+common_weight+"*ewk_z*zkfactor","goff")
                 #makeTrees(Type,'events',channel).Draw(var + " >> " + histName,"(" + cut_standard + ")"+common_weight+"*ewk_z","goff")
             elif Type.startswith('Wlv'):
-                makeTrees(Type,'events',channel).Draw(var + " >> " + histName,"(" + cut_standard + ")"+common_weight+"*ewk_w","goff")
+                makeTrees(Type,'events',channel).Draw(var + " >> " + histName,"(" + cut_standard + ")"+common_weight+"*ewk_w*wkfactor","goff")
             elif Type.startswith('QCD') and channel is 'signal':
                 makeTrees(Type,'events',channel).Draw(var + " >> " + histName,"(" + cut_standard + ")"+common_weight,"goff")
             else:
@@ -377,10 +403,14 @@ def plot_stack(channel, name,var, bin, low, high, ylabel, xlabel, setLog = False
 
     ###### Create a root file and save the histograms individually
     #if var == 'photonPt' or var=='dilepPt':
-    if var=='met':
+
+    print var, "trying to write"
+    if var=="jet1Pt":
         fhist = ROOT.TFile(channel+"_fullhist.root","recreate")
         fhist.cd();
         for Type in reordered_physics_processes:
+            print Type
+            if Type.startswith('EWK'): continue
             Variables[Type].Write()
         fhist.Write()
         fhist.Close()
@@ -418,6 +448,7 @@ arguments['dPhi_phomet'] = ['deltaPhi_phomet','TMath::Abs(deltaPhi(photonPhi,met
 
 
 arguments['npv']  = ['npv','npv',25,0,50,'Events','npv',False]
+arguments['npv2']  = ['npv2','npv',25,0,50,'Events','npv uncorrected',False]
 
 arguments['fatjet1Pt']       = ['fatjet1Pt','fatjet1Pt',20,100,1500,'Events/GeV','Leading Fat Jet P_{T} [GeV]',True]
 arguments['fatjet1PrunedM']  = ['fatjet1PrunedM','fatjet1PrunedM',20,0,500,'Events/GeV','Pruned FatJet Mass [GeV]',True]
@@ -431,10 +462,12 @@ arguments['njetsclean']  = ['njetsclean','n_cleanedjets',8,0,8,'Events','Number 
 
 arguments['jet1isMonoJetIdNew'] = ['jet1isMonoJetIdNew','jet1isMonoJetIdNew',2,0,2,'Events','jet1isMonoJetIdNew',True]
 arguments['deltaPhi'] = ['minJetMetDPhi_clean','minJetMetDPhi_clean',30,0,3.0,'Events','min deltaPhi(jet,met)',False]
-arguments['deltaPhi_endcap'] = ['minJetMetDPhi_withendcap','abs(minJetMetDPhi_withendcap)',30,0,3.0,'Events','min deltaPhi(jet,met)',False]
+arguments['deltaPhi_endcap'] = ['minJetMetDPhi_withendcap','abs(minJetMetDPhi_withendcap)',60,0,6.0,'Events','min deltaPhi(jet,met)',False]
+
 arguments['dPhi_j1j2'] = ['dPhi_j1j2','dPhi_j1j2',30,0,3.0,'Events','deltaPhi(j,j)',False]
-arguments['dPhi_j1met'] = ['deltaPhi_jet1met','TMath::Abs(deltaPhi(jot1Phi,metPhi))',30,0,3.0,'Events','deltaPhi(j1,met)',False]
-arguments['dPhi_jo1jo2'] = ['deltaPhi_jet1jet2','TMath::Abs(deltaPhi(jot1Phi,jot2Phi))',30,0,3.0,'Events','deltaPhi(j1,j2)',False]
+arguments['dPhi_j1met'] = ['deltaPhi_jet1met','TMath::Abs(deltaPhi(jot1Phi,metPhi))',60,0,6.0,'Events','deltaPhi(j1,met)',False]
+arguments['dPhi_jo1jo2'] = ['deltaPhi_jet1jet2','TMath::Abs(deltaPhi(jot1Phi,jot2Phi))',60,0,6.0,'Events','deltaPhi(j1,j2)',False]
+
 arguments['mass'] = ['mass','vectormass(photonPt,photonPhi,photonEta,fatjet1Pt,fatjet1Phi,fatjet1Phi)',100,400,2400,'Events','M_{j#gamma} [GeV]',True]
 
 arguments['jot1Pt']  = ['jot1Pt','jot1Pt',20,100,1000,'Events/GeV','Leading Jet P_{T} [GeV]',True]
@@ -445,8 +478,11 @@ arguments['jot2Pt']  = ['jot2Pt','jot2Pt',20,40,840,'Events/GeV','Trailing Jet P
 arguments['jot2Eta'] = ['jot2Eta','jot2Eta',50,-5.0,5.0,'Events','Trailing Jet #eta',False]
 arguments['jot2Phi'] = ['jot2Phi','jot2Phi',50,-5.0,5.0,'Events','Trailing Jet #phi',False]
 
-arguments['mjj']     = ['mjj','mjj',20,0,3500,'Events/GeV','M_{JJ} [GeV]',True]
-arguments['jjDEta']  = ['jjDEta','jjDEta',30,0,6.0,'Events','#Delta#eta_{JJ}',False]
+arguments['deltaRj1l1'] = ['deltaRj1l1','TMath::Abs(deltaR(jot1Phi,jot1Eta,lep1Phi,lep1Eta))',10,0,1.0,'Events','dR(jet1,lep1)']
+
+
+arguments['mjj']     = ['mjj','mjj',20,1000,5000,'Events/GeV','M_{JJ} [GeV]',True]
+arguments['jjDEta']  = ['jjDEta','jjDEta',60,0,12.0,'Events','#Delta#eta_{JJ}',False]
 
 #arguments['ht_cleanedjets']  = ['ht_cleanedjets','ht_cleanedjets',40,0,2000,'Events/GeV','H_{T} [GeV]',True]
 arguments['ht_cleanedjets']  = ['ht_cleanedjets','ht_cleanedjets',10,0,2000,'Events/GeV','H_{T} [GeV]',True]
@@ -474,15 +510,21 @@ processes     = []
 #variable_list = ['met','npv','jetpt', 'fatjet1tau21','fatjet1Pt','fatjet1PrunedM']
 
 if vbf:
-    variable_list = ['met','dPhi_jo1jo2']
-    #variable_list = ['met','jot1Pt','jot1Eta','jot2Pt','jot1Phi','jot2Phi','jot2Eta','mjj','jjDEta','deltaPhi_endcap','njetsclean','dPhi_j1met']
+    #variable_list = ['met']
+    #variable_list = ['met','deltaRj1l1']
+    variable_list = ['met','jot1Pt','jot1Eta','jot2Pt','jot1Phi','jot2Phi','jot2Eta','mjj','jjDEta','deltaPhi_endcap','njetsclean','dPhi_j1met','dPhi_jo1jo2']
 elif vtag:
-    variable_list = ['met','npv']
-    #variable_list = ['met', 'fatjet1tau21','fatjet1Pt','fatjet1PrunedM','trueMet','photonPt']
+    #variable_list = ['met','npv']
+    variable_list = ['met', 'fatjet1tau21','fatjet1Pt','fatjet1PrunedM','trueMet','photonPt','npv','jet1QGL']
+    #variable_list = ['fatjet1tau21','fatjet1Pt','fatjet1PrunedM']
+    #variable_list = ['jet1QGL','met']
 else:
+    variable_list = ['npv2']
+    #variable_list = ['met','npv']
     #variable_list = ['met','jetpt','deltaPhi_endcap','npv','ht_cleanedjets','dPhi_j1met','njetsclean','photonPt','diffMet','diffMet2']
     #variable_list = ['met','jetpt','deltaPhi_endcap','npv','ht_cleanedjets','dPhi_j1met','njetsclean','photonPt','lep1Pt','lep1Eta','lep2Eta','dilepPt','trueMet','mt','jet1QGL','photonEta','phoSmearedPt','lep2Pt','dilep_m']
-    variable_list = ['lep2Pt','met']
+    #variable_list = ['lep2Pt','met']
+    #variable_list = ['met']    
     #variable_list = ['diffMet','diffMetrecoil']
     #variable_list = ['met','diffMet2','diffMet']
     #variable_list = ['met','jetpt','ht_cleanedjets','njetsclean','npv']

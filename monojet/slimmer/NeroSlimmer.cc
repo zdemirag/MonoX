@@ -93,6 +93,18 @@ enum TauSelection{
     byVTightIsolationMVArun2v1DBnewDMwLT= 1UL <<19,
 };
 
+enum genflag{
+    PromptFinalState = 1UL<<0, //isPromptFinalState()
+    PromptDecayed = 1UL<<1, //isPromptDecayed()
+    DirectPromptTauDecayProductFinalState = 1UL<<2,//isDirectPromptTauDecayProductFinalState()
+    HardProcess = 1UL<<3, // isHardProcess
+    HardProcessBeforeFSR   = 1UL<<4, // fromHardProcessBeforeFSR
+    HardProcessDecayed = 1UL<<5 , //fromHardProcessDecayed() -- like a tau from the hard process
+    LastCopy  = 1UL<<6, // isLastCopy()
+    LastCopyBeforeFSR = 1UL<<7, //isLastCopyBeforeFSR()
+    Dressed = 1UL<<8, // dressed PromptFinal Lepton, cone 0.1
+};
+
 enum IsoType {
   kIsoVeto = 0,  
   kIsoLoose,
@@ -273,6 +285,28 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
     outTree->filterbadPFMuon = inTree->filterbadPFMuon;
 
 
+    for (Int_t iGen = 0; iGen < inTree->genP4->GetEntries(); iGen++) {
+
+        TLorentzVector* tempGen = (TLorentzVector*) inTree->genP4->At(iGen);
+        Int_t checkPdgId = abs((*(inTree->genPdgId))[iGen]);
+        int promptfinalstate = ((*(inTree->genFlags))[iGen] & PromptFinalState) == PromptFinalState;
+        int tauflags = ((((*(inTree->genFlags))[iGen] & HardProcess) == HardProcess) || (((*(inTree->genFlags))[iGen] & HardProcessDecayed) == HardProcessDecayed) ||(((*(inTree->genFlags))[iGen] & HardProcessBeforeFSR) == HardProcessBeforeFSR) );
+        
+        if ((checkPdgId == 11 || checkPdgId == 13) && promptfinalstate == 1){
+            //std::cout << "tempGen pt " << tempGen->Pt() << " " << checkPdgId << " " << promptfinalstate << " " << tauflags <<std::endl;
+            outTree->genlep_pdgid = checkPdgId;
+        }
+
+        if (checkPdgId == 15 && tauflags==1) {
+            //std::cout << "tempGen pt " << tempGen->Pt() << " " << checkPdgId << " " << promptfinalstate << " " << tauflags<<std::endl;
+            outTree->genlep_pdgid = checkPdgId;
+
+        }
+    } 
+    
+//outTree->genlep1_pdgid = inTree->genPdgId[0]
+
+
     //// Here is the lepton filling ////
     if (inTree->eleP4_smear->GetEntries() >0){
         TLorentzVector* smearEle = (TLorentzVector*) inTree->eleP4_smear->At(0);
@@ -283,6 +317,7 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
     for (Int_t iLepton = 0; iLepton < inTree->lepP4->GetEntries(); iLepton++) {
       TLorentzVector* tempLepton = (TLorentzVector*) inTree->lepP4->At(iLepton);
       
+
       //// Rejecting leptons with Eta cuts ////
 
       if ((fabs(tempLepton->Eta()) > 2.5) ||
@@ -466,8 +501,9 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
     }
 
     // Place met cut here //
-    //if (outTree->met < 50) {
-    if (outTree->met < 170) {
+    if (outTree->met < 0) {
+    //if (outTree->met < 170) {
+        //if (outTree->met < 0) {
       outTree->Reset();
       continue;
     }
@@ -534,7 +570,8 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
       //if (fabs(tempJet->Eta()) > 2.4 || (*(inTree->jetPuId))[iJet] < -0.62 || tempJet->Pt() < 15.0)
 
       //if (fabs(tempJet->Eta()) > 2.5 || tempJet->Pt() < 15.0)
-      if (fabs(tempJet->Eta()) > 2.4 || tempJet->Pt() < 15.0)
+      //if (fabs(tempJet->Eta()) > 2.4 || tempJet->Pt() < 15.0)
+      if (fabs(tempJet->Eta()) > 2.4 || tempJet->Pt() < 20.0)
         continue;
 
       //if (!PassPuId(tempJet->Pt(), tempJet->Eta(),(*(inTree->jetPuId))[iJet], kpuMedium))
@@ -947,29 +984,90 @@ void NeroSlimmer(TString inFileName, TString outFileName, Bool_t isSig = false) 
       }
     }
 
+    // Now for the VBF:
+
+    for (Int_t iJet = 0; iJet < inTree->jetP4->GetEntries(); iJet++) {
+        TLorentzVector* tempJet = (TLorentzVector*) inTree->jetP4->At(iJet);            
+        
+        Bool_t match = false;
+      
+        for (UInt_t iLepton = 0; iLepton < leptonVecs.size(); iLepton++) {
+            if (deltaR(leptonVecs[iLepton]->Phi(),leptonVecs[iLepton]->Eta(),tempJet->Phi(),tempJet->Eta()) < dROverlap) {
+                match = true;
+                break;
+            }
+        }
+        
+        if (match == false) {
+            for (UInt_t iPhoton = 0; iPhoton < photonVecs.size(); iPhoton++) {
+                if (deltaR(photonVecs[iPhoton]->Phi(),photonVecs[iPhoton]->Eta(),tempJet->Phi(),tempJet->Eta()) < dROverlap) {
+                    match = true;
+                  break;
+                }
+            }
+        }
+        
+        if (!(((*(inTree->jetSelBits))[iJet] & JetLoose) == JetLoose))
+            continue;
+  
+        if (tempJet->Pt() < 30.0)
+            continue;
+
+        if (match)
+            continue;
+
+        outTree->n_cleanedjets_vbf++;
+
+        if (outTree->n_cleanedjets_vbf == 1) {
+            outTree->jot1Pt  = tempJet->Pt();
+            outTree->jot1Eta = tempJet->Eta();
+            outTree->jot1Phi = tempJet->Phi();
+            outTree->jot1M   = tempJet->M();
+        }
+
+        if (outTree->n_cleanedjets_vbf == 2) {
+            outTree->jot2Pt  = tempJet->Pt();
+            outTree->jot2Eta = tempJet->Eta();
+            outTree->jot2Phi = tempJet->Phi();
+            outTree->jot2M   = tempJet->M();                        
+
+            TLorentzVector vec1;
+            TLorentzVector vec2;
+            TLorentzVector dijet;
+            vec1.SetPtEtaPhiM(outTree->jot1Pt,outTree->jot1Eta,outTree->jot1Phi,outTree->jot1M);
+            vec2.SetPtEtaPhiM(outTree->jot2Pt,outTree->jot2Eta,outTree->jot2Phi,outTree->jot2M);
+            dijet = vec1 + vec2;
+            outTree->mjj  = dijet.M();
+            outTree->jjDEta = fabs(outTree->jot2Eta - outTree->jot1Eta);
+        }
+
+    }
+
+    /*
     // Now do the VBF cut
     //if (outTree->n_jetsCleanWithEndcap > 1) {
     if (inTree->jetP4->GetEntries() > 1) {
-      TLorentzVector* tempJet1 = (TLorentzVector*) inTree->jetP4->At(0);
-      TLorentzVector* tempJet2 = (TLorentzVector*) inTree->jetP4->At(1);
-      TLorentzVector dijet = *(tempJet1) + *(tempJet2);
+        TLorentzVector* tempJet1 = (TLorentzVector*) inTree->jetP4->At(0);
+        TLorentzVector* tempJet2 = (TLorentzVector*) inTree->jetP4->At(1);
+        TLorentzVector dijet = *(tempJet1) + *(tempJet2);
 
-      outTree->jot1Pt = tempJet1->Pt();
-      outTree->jot1Eta = tempJet1->Eta();
-      outTree->jot1Phi = tempJet1->Phi();
-      outTree->jot1M = tempJet1->M();
-      outTree->jot2Pt = tempJet2->Pt();
-      outTree->jot2Eta = tempJet2->Eta();
-      outTree->jot2Phi = tempJet2->Phi();
-      outTree->jot2M = tempJet2->M();
+        outTree->jot1Pt = tempJet1->Pt();
+        outTree->jot1Eta = tempJet1->Eta();
+        outTree->jot1Phi = tempJet1->Phi();
+        outTree->jot1M = tempJet1->M();
+        outTree->jot2Pt = tempJet2->Pt();
+        outTree->jot2Eta = tempJet2->Eta();
+        outTree->jot2Phi = tempJet2->Phi();
+        outTree->jot2M = tempJet2->M();
 
-      //outTree->mjj  = vectorSumMass(tempJet1->Pt(), tempJet1->Eta(), tempJet1->Phi(), tempJet1->M(), tempJet2->Pt(), tempJet2->Eta(), tempJet2->Phi(), tempJet2->M());
-      outTree->mjj  = dijet.M();
+        //outTree->mjj  = vectorSumMass(tempJet1->Pt(), tempJet1->Eta(), tempJet1->Phi(), tempJet1->M(), tempJet2->Pt(), tempJet2->Eta(), tempJet2->Phi(), tempJet2->M());
+        outTree->mjj  = dijet.M();
 
-      outTree->jjDEta = fabs(tempJet1->Eta() - tempJet2->Eta());
-      outTree->IsVBF = tempJet1->Pt() > 80 && tempJet2->Pt() > 70 && vectorSumMass(tempJet1->Pt(), tempJet1->Eta(), tempJet1->Phi(), tempJet1->M(), tempJet2->Pt(), tempJet2->Eta(), tempJet2->Phi(), tempJet2->M()) > 1100 && fabs(tempJet1->Eta() - tempJet2->Eta()) > 3.6 && outTree->minJetMetDPhi_clean > 2.3;
+        outTree->jjDEta = fabs(tempJet1->Eta() - tempJet2->Eta());
+        outTree->IsVBF = tempJet1->Pt() > 80 && tempJet2->Pt() > 70 && vectorSumMass(tempJet1->Pt(), tempJet1->Eta(), tempJet1->Phi(), tempJet1->M(), tempJet2->Pt(), tempJet2->Eta(), tempJet2->Phi(), tempJet2->M()) > 1100 && fabs(tempJet1->Eta() - tempJet2->Eta()) > 3.6 && outTree->minJetMetDPhi_clean > 2.3;
     }
-
+    */
+  
     outTree->Fill();
 
   }

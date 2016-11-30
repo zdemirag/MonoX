@@ -1,10 +1,10 @@
-signal_h125_ggf                     monojet_GluGlu_HToInvisible_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root     43.92  .  .
-signal_h125_vbf                     monojet_VBF_HToInvisible_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2+AODSIM.root        4.233  .  .
+signal_h125_ggf    monojet_GluGlu_HToInvisible_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root     43.92  .  .
 
-#ewk_Zll            monojet_EWKZ2Jets_ZToLL_M-50_13TeV.root                                     3.99         EWK_Zll               840
-#ewk_Zvv            monojet_EWKZ2Jets_ZToNuNu_13TeV.root                                       10.04         EWK_Zvv               840
-#ewk_Wp             monojet_EWKWPlus2Jets_WToLNu_M-50_13TeV.root                               25.81         EWK_Wp                840
-#ewk_Wm             monojet_EWKWMinus2Jets_WToLNu_M-50_13TeV.root                              20.35         EWK_Wm                840
+signal_h125_vbf    monojet_VBF_HToInvisible_M125_13TeV_powheg_pythia8.root                     3.748        vbf_higgs              .
+ewk_Zll            monojet_EWKZ2Jets_ZToLL_M-50_13TeV.root                                     3.99         EWK_Zll               840
+ewk_Zvv            monojet_EWKZ2Jets_ZToNuNu_13TeV.root                                       10.04         EWK_Zvv               840
+ewk_Wp             monojet_EWKWPlus2Jets_WToLNu_M-50_13TeV.root                               25.81         EWK_Wp                840
+ewk_Wm             monojet_EWKWMinus2Jets_WToLNu_M-50_13TeV.root                              20.35         EWK_Wm                840
 
 Zll_ht100          monojet_DYJetsToLL_M-50_HT-100to200.root                                  148.0          Drell_Yan             840
 Zll_ht200          monojet_DYJetsToLL_M-50_HT-200to400.root                                   40.94             .                  .

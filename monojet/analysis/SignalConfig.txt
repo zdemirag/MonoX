@@ -1,2 +1,2 @@
-signal_h125_ggf                     monojet_GluGlu_HToInvisible_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root     43.92  .  .
-signal_h125_vbf                     monojet_VBF_HToInvisible_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2+AODSIM.root        4.233  .  .
+signal_h125_vbf    monojet_VBF_HToInvisible_M125_13TeV_powheg_pythia8.root                     3.748        .              .
+
